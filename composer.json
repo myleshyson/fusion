@@ -12,5 +12,7 @@
             "email": "myleshyson@ufl.edu"
         }
     ],
-    "require": {}
+    "require": {
+        "laravel/prompts": "^0.3.10"
+    }
 }
