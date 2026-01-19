@@ -212,6 +212,18 @@ describe('ClaudeCode', function () {
         $config = json_decode(file_get_contents("{$this->artifactPath}/.claude/mcp.json"), true);
         expect($config['mcpServers']['db']['env']['DATABASE_URL'])->toBe('${DB_URL}');
     });
+
+    it('writes empty MCP config as object not array', function () {
+        $agent = new ClaudeCode($this->artifactPath);
+        $agent->writeMcpConfig([]);
+
+        $rawContent = file_get_contents("{$this->artifactPath}/.claude/mcp.json");
+        // Ensure the JSON contains {} not [] for mcpServers
+        expect($rawContent)->toContain('"mcpServers": {}');
+
+        $config = json_decode($rawContent, true);
+        expect($config['mcpServers'])->toBe([]);
+    });
 });
 
 // ==================== OpenCode Tests ====================
@@ -370,6 +382,18 @@ describe('OpenCode', function () {
         expect($config['mcp']['existing']['command'])->toBe(['old']);
         expect($config['mcp']['new']['command'])->toBe(['new-cmd']);
     });
+
+    it('writes empty MCP config as object not array', function () {
+        $agent = new OpenCode($this->artifactPath);
+        $agent->writeMcpConfig([]);
+
+        $rawContent = file_get_contents("{$this->artifactPath}/opencode.json");
+        // Ensure the JSON contains {} not [] for mcp
+        expect($rawContent)->toContain('"mcp": {}');
+
+        $config = json_decode($rawContent, true);
+        expect($config['mcp'])->toBe([]);
+    });
 });
 
 // ==================== Cursor Tests ====================
@@ -511,6 +535,18 @@ describe('Cursor', function () {
         expect($config['mcpServers']['existing']['command'])->toBe('old');
         expect($config['mcpServers']['new']['command'])->toBe('new-cmd');
         expect($config['mcpServers']['new']['args'])->toBe(['arg']);
+    });
+
+    it('writes empty MCP config as object not array', function () {
+        $agent = new Cursor($this->artifactPath);
+        $agent->writeMcpConfig([]);
+
+        $rawContent = file_get_contents("{$this->artifactPath}/.cursor/mcp.json");
+        // Ensure the JSON contains {} not [] for mcpServers
+        expect($rawContent)->toContain('"mcpServers": {}');
+
+        $config = json_decode($rawContent, true);
+        expect($config['mcpServers'])->toBe([]);
     });
 });
 
@@ -663,6 +699,18 @@ describe('Copilot', function () {
         $config = json_decode(file_get_contents("{$this->artifactPath}/.vscode/mcp.json"), true);
         expect($config['servers']['with-env']['env'])->toBe(['VAR' => 'value']);
         expect($config['servers']['without-env'])->not->toHaveKey('env');
+    });
+
+    it('writes empty MCP config as object not array', function () {
+        $agent = new Copilot($this->artifactPath);
+        $agent->writeMcpConfig([]);
+
+        $rawContent = file_get_contents("{$this->artifactPath}/.vscode/mcp.json");
+        // Ensure the JSON contains {} not [] for servers
+        expect($rawContent)->toContain('"servers": {}');
+
+        $config = json_decode($rawContent, true);
+        expect($config['servers'])->toBe([]);
     });
 });
 
@@ -850,6 +898,18 @@ describe('Gemini', function () {
         expect($config['mcpServers']['existing']['command'])->toBe('old');
         expect($config['mcpServers']['new']['command'])->toBe('new-cmd');
         expect($config['mcpServers']['new']['args'])->toBe(['arg']);
+    });
+
+    it('writes empty MCP config as object not array', function () {
+        $agent = new Gemini($this->artifactPath);
+        $agent->writeMcpConfig([]);
+
+        $rawContent = file_get_contents("{$this->artifactPath}/.gemini/settings.json");
+        // Ensure the JSON contains {} not [] for mcpServers
+        expect($rawContent)->toContain('"mcpServers": {}');
+
+        $config = json_decode($rawContent, true);
+        expect($config['mcpServers'])->toBe([]);
     });
 });
 
@@ -1077,5 +1137,17 @@ describe('Junie', function () {
         expect($config['mcpServers']['existing']['command'])->toBe('old');
         expect($config['mcpServers']['new']['command'])->toBe('new-cmd');
         expect($config['mcpServers']['new']['args'])->toBe(['arg']);
+    });
+
+    it('writes empty MCP config as object not array', function () {
+        $agent = new Junie($this->artifactPath);
+        $agent->writeMcpConfig([]);
+
+        $rawContent = file_get_contents("{$this->artifactPath}/.junie/mcp/mcp.json");
+        // Ensure the JSON contains {} not [] for mcpServers
+        expect($rawContent)->toContain('"mcpServers": {}');
+
+        $config = json_decode($rawContent, true);
+        expect($config['mcpServers'])->toBe([]);
     });
 });

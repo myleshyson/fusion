@@ -75,7 +75,8 @@ class Copilot extends BaseAgent
             $mcpServers[$name] = $server;
         }
 
-        return ['servers' => $mcpServers];
+        // Use stdClass to ensure empty config serializes as {} not []
+        return ['servers' => empty($mcpServers) ? new \stdClass : $mcpServers];
     }
 
     protected function mergeMcpConfig(array $existing, array $new): array

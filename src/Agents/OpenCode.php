@@ -73,7 +73,8 @@ class OpenCode extends BaseAgent
             $mcpConfig[$name] = $server;
         }
 
-        return ['mcp' => $mcpConfig];
+        // Use stdClass to ensure empty config serializes as {} not []
+        return ['mcp' => empty($mcpConfig) ? new \stdClass : $mcpConfig];
     }
 
     protected function mergeMcpConfig(array $existing, array $new): array

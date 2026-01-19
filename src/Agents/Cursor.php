@@ -74,7 +74,8 @@ class Cursor extends BaseAgent
             $mcpServers[$name] = $server;
         }
 
-        return ['mcpServers' => $mcpServers];
+        // Use stdClass to ensure empty config serializes as {} not []
+        return ['mcpServers' => empty($mcpServers) ? new \stdClass : $mcpServers];
     }
 
     protected function mergeMcpConfig(array $existing, array $new): array
