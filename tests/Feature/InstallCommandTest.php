@@ -1,7 +1,7 @@
 <?php
 
-use Myleshyson\Fusion\App;
-use Myleshyson\Fusion\Commands\InstallCommand;
+use Myleshyson\Mush\App;
+use Myleshyson\Mush\Commands\InstallCommand;
 use Zenstruck\Console\Test\TestCommand;
 
 beforeEach(function () {
@@ -23,13 +23,13 @@ it('initializes a fusion project correctly', function () {
         ->assertSuccessful()
         ->assertOutputContains('Fusion initialized successfully!');
 
-    // Verify .fusion directory structure
-    expect("{$this->artifactPath}/.fusion")->toBeDirectory();
-    expect("{$this->artifactPath}/.fusion/guidelines")->toBeDirectory();
-    expect("{$this->artifactPath}/.fusion/guidelines/.gitignore")->toBeFile();
-    expect("{$this->artifactPath}/.fusion/skills")->toBeDirectory();
-    expect("{$this->artifactPath}/.fusion/skills/.gitignore")->toBeFile();
-    expect("{$this->artifactPath}/.fusion/mcp.json")->toBeFile();
+    // Verify .mush directory structure
+    expect("{$this->artifactPath}/.mush")->toBeDirectory();
+    expect("{$this->artifactPath}/.mush/guidelines")->toBeDirectory();
+    expect("{$this->artifactPath}/.mush/guidelines/.gitignore")->toBeFile();
+    expect("{$this->artifactPath}/.mush/skills")->toBeDirectory();
+    expect("{$this->artifactPath}/.mush/skills/.gitignore")->toBeFile();
+    expect("{$this->artifactPath}/.mush/mcp.json")->toBeFile();
 
     // Verify agent files were created
     expect("{$this->artifactPath}/.claude/CLAUDE.md")->toBeFile();
@@ -37,8 +37,8 @@ it('initializes a fusion project correctly', function () {
 });
 
 it('fails if fusion is already initialized', function () {
-    // Create existing .fusion directory
-    mkdir("{$this->artifactPath}/.fusion", 0777, true);
+    // Create existing .mush directory
+    mkdir("{$this->artifactPath}/.mush", 0777, true);
 
     $command = new InstallCommand;
     $command->setApplication(App::build());

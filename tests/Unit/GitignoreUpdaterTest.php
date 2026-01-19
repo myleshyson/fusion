@@ -1,6 +1,6 @@
 <?php
 
-use Myleshyson\Fusion\Support\GitignoreUpdater;
+use Myleshyson\Mush\Support\GitignoreUpdater;
 
 beforeEach(function () {
     $this->artifactPath = __DIR__.'/../artifacts/gitignore';

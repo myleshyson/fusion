@@ -9,7 +9,7 @@ if (file_exists(__DIR__.'/../../../autoload.php')) {
     require __DIR__.'/../vendor/autoload.php';
 }
 
-use Myleshyson\Fusion\App;
+use Myleshyson\Mush\App;
 
 $app = App::build();
 $app->run();

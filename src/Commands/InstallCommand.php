@@ -1,12 +1,12 @@
 <?php
 
-namespace Myleshyson\Fusion\Commands;
+namespace Myleshyson\Mush\Commands;
 
-use Myleshyson\Fusion\Compilers\GuidelinesCompiler;
-use Myleshyson\Fusion\Compilers\SkillsCompiler;
-use Myleshyson\Fusion\Support\AgentFactory;
-use Myleshyson\Fusion\Support\GitignoreUpdater;
-use Myleshyson\Fusion\Support\McpConfigReader;
+use Myleshyson\Mush\Compilers\GuidelinesCompiler;
+use Myleshyson\Mush\Compilers\SkillsCompiler;
+use Myleshyson\Mush\Support\AgentFactory;
+use Myleshyson\Mush\Support\GitignoreUpdater;
+use Myleshyson\Mush\Support\McpConfigReader;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,9 +39,9 @@ class InstallCommand extends Command
     {
         /** @var string $workingDirectory */
         $workingDirectory = $input->getOption('working-dir') ?? getcwd();
-        $fusionPath = $workingDirectory.'/.fusion';
+        $fusionPath = $workingDirectory.'/.mush';
 
-        // Check if .fusion already exists
+        // Check if .mush already exists
         if (is_dir($fusionPath)) {
             $output->writeln('<error>Fusion is already initialized in this directory.</error>');
             $output->writeln('Run <info>fusion update</info> to sync agent files.');
@@ -52,7 +52,7 @@ class InstallCommand extends Command
         // Get agents from options or prompt interactively
         $selectedAgents = $this->getSelectedAgents($input, $workingDirectory);
 
-        // Create .fusion directory structure
+        // Create .mush directory structure
         $this->createFusionStructure($fusionPath);
 
         // Write empty mcp.json template
@@ -89,15 +89,15 @@ class InstallCommand extends Command
 
         // Update .gitignore
         $gitignoreUpdater = new GitignoreUpdater($workingDirectory);
-        $writtenPaths[] = '.fusion/mcp.override.json'; // Always gitignore local overrides
+        $writtenPaths[] = '.mush/mcp.override.json'; // Always gitignore local overrides
         $gitignoreUpdater->addPaths($writtenPaths);
 
         $output->writeln('<info>Fusion initialized successfully!</info>');
         $output->writeln('');
         $output->writeln('Next steps:');
-        $output->writeln('  1. Add guideline markdown files to <comment>.fusion/guidelines/</comment>');
-        $output->writeln('  2. Add skills as subdirectories with SKILL.md to <comment>.fusion/skills/</comment>');
-        $output->writeln('  3. Configure MCP servers in <comment>.fusion/mcp.json</comment>');
+        $output->writeln('  1. Add guideline markdown files to <comment>.mush/guidelines/</comment>');
+        $output->writeln('  2. Add skills as subdirectories with SKILL.md to <comment>.mush/skills/</comment>');
+        $output->writeln('  3. Configure MCP servers in <comment>.mush/mcp.json</comment>');
         $output->writeln('  4. Run <comment>fusion update</comment> to sync changes');
 
         return Command::SUCCESS;
@@ -167,7 +167,7 @@ class InstallCommand extends Command
      */
     protected function formatOutput(string $guidelines, array $skills): string
     {
-        $output = "<fusion-guidelines>\n\n";
+        $output = "<mush-guidelines>\n\n";
         $output .= "=== Guidelines ===\n\n";
         $output .= $guidelines ?: '(No guidelines defined yet)';
         $output .= "\n\n=== Skills ===\n\n";
@@ -185,7 +185,7 @@ class InstallCommand extends Command
             }
         }
 
-        $output .= "\n</fusion-guidelines>\n";
+        $output .= "\n</mush-guidelines>\n";
 
         return $output;
     }

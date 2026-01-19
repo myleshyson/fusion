@@ -1,7 +1,7 @@
 <?php
 
-use Myleshyson\Fusion\Compilers\GuidelinesCompiler;
-use Myleshyson\Fusion\Compilers\SkillsCompiler;
+use Myleshyson\Mush\Compilers\GuidelinesCompiler;
+use Myleshyson\Mush\Compilers\SkillsCompiler;
 
 beforeEach(function () {
     $this->artifactPath = __DIR__.'/../artifacts/compilers';

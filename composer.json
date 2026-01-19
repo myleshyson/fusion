@@ -1,10 +1,10 @@
 {
-  "name": "myleshyson/fusion",
+  "name": "myleshyson/mush",
   "description": "A simple tool to manage AI guideline configurations",
-  "bin": ["bin/fusion"],
+  "bin": ["bin/mush"],
   "autoload": {
     "psr-4": {
-      "Myleshyson\\Fusion\\": "src/"
+      "Myleshyson\\Mush\\": "src/"
     }
   },
   "autoload-dev": {

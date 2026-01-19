@@ -85,20 +85,20 @@ jobs:
 
       - name: Combine micro.sfx + PHAR
         run: |
-          cat builds/buildroot/bin/micro.sfx builds/fusion.phar > builds/fusion
-          chmod +x builds/fusion
+          cat builds/buildroot/bin/micro.sfx builds/mush.phar > builds/mush
+          chmod +x builds/mush
 
       - name: Test binary
-        run: ./builds/fusion --version
+        run: ./builds/mush --version
 
       - name: Rename binary for release
-        run: mv builds/fusion builds/fusion-${{ matrix.os }}-${{ matrix.arch }}
+        run: mv builds/mush builds/mush-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fusion-${{ matrix.os }}-${{ matrix.arch }}
-          path: builds/fusion-${{ matrix.os }}-${{ matrix.arch }}
+          name: mush-${{ matrix.os }}-${{ matrix.arch }}
+          path: builds/mush-${{ matrix.os }}-${{ matrix.arch }}
 
   build-windows:
     name: Build windows-x64
@@ -151,19 +151,19 @@ jobs:
 
       - name: Combine micro.sfx + PHAR
         run: |
-          cmd /c copy /b builds\buildroot\bin\micro.sfx + builds\fusion.phar builds\fusion.exe
+          cmd /c copy /b builds\buildroot\bin\micro.sfx + builds\mush.phar builds\mush.exe
 
       - name: Test binary
-        run: .\builds\fusion.exe --version
+        run: .\builds\mush.exe --version
 
       - name: Rename binary for release
-        run: Move-Item builds\fusion.exe builds\fusion-windows-x64.exe
+        run: Move-Item builds\mush.exe builds\mush-windows-x64.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fusion-windows-x64
-          path: builds/fusion-windows-x64.exe
+          name: mush-windows-x64
+          path: builds/mush-windows-x64.exe
 
   release:
     name: Create Release
@@ -181,23 +181,23 @@ jobs:
       - name: Prepare release files
         run: |
           mkdir -p release
-          for dir in artifacts/fusion-*; do
+          for dir in artifacts/mush-*; do
             cp "$dir"/* release/
           done
-          chmod +x release/fusion-linux-* release/fusion-macos-* || true
+          chmod +x release/mush-linux-* release/mush-macos-* || true
           ls -la release/
 
       - name: Create checksums
         run: |
           cd release
-          sha256sum fusion-* > checksums.txt
+          sha256sum mush-* > checksums.txt
           cat checksums.txt
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release/fusion-*
+            release/mush-*
             release/checksums.txt
           generate_release_notes: true
           draft: false

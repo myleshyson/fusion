@@ -1,6 +1,6 @@
 <?php
 
-namespace Myleshyson\Fusion\Contracts;
+namespace Myleshyson\Mush\Contracts;
 
 interface AgentInterface
 {

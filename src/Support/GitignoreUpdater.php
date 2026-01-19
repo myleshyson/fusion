@@ -1,6 +1,6 @@
 <?php
 
-namespace Myleshyson\Fusion\Support;
+namespace Myleshyson\Mush\Support;
 
 class GitignoreUpdater
 {

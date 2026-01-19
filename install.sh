@@ -1,12 +1,12 @@
 #!/bin/sh
-# Fusion installer script
-# Usage: curl -fsSL https://raw.githubusercontent.com/myleshyson/fusion/main/install.sh | sh
+# Mush installer script
+# Usage: curl -fsSL https://raw.githubusercontent.com/myleshyson/mush/main/install.sh | sh
 
 set -e
 
-REPO="myleshyson/fusion"
-INSTALL_DIR="${FUSION_INSTALL_DIR:-/usr/local/bin}"
-BINARY_NAME="fusion"
+REPO="myleshyson/mush"
+INSTALL_DIR="${MUSH_INSTALL_DIR:-/usr/local/bin}"
+BINARY_NAME="mush"
 
 # Colors for output
 RED='\033[0;31m'
@@ -53,7 +53,7 @@ get_latest_version() {
 }
 
 # Download and install
-install_fusion() {
+install_mush() {
     OS=$(detect_os)
     ARCH=$(detect_arch)
     
@@ -61,16 +61,16 @@ install_fusion() {
     info "Detected architecture: ${ARCH}"
     
     # Get version (use provided or fetch latest)
-    VERSION="${FUSION_VERSION:-$(get_latest_version)}"
+    VERSION="${MUSH_VERSION:-$(get_latest_version)}"
     
     if [ -z "$VERSION" ]; then
-        error "Could not determine latest version. Please set FUSION_VERSION environment variable."
+        error "Could not determine latest version. Please set MUSH_VERSION environment variable."
     fi
     
-    info "Installing Fusion ${VERSION}..."
+    info "Installing Mush ${VERSION}..."
     
     # Construct download URL
-    DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${VERSION}/fusion-${OS}-${ARCH}"
+    DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${VERSION}/mush-${OS}-${ARCH}"
     
     info "Downloading from: ${DOWNLOAD_URL}"
     
@@ -81,7 +81,7 @@ install_fusion() {
     # Download binary
     if ! curl -fsSL -o "${TMP_FILE}" "${DOWNLOAD_URL}"; then
         rm -rf "${TMP_DIR}"
-        error "Failed to download Fusion. Please check if the release exists for your platform."
+        error "Failed to download Mush. Please check if the release exists for your platform."
     fi
     
     # Make executable
@@ -105,17 +105,17 @@ install_fusion() {
     rm -rf "${TMP_DIR}"
     
     # Verify installation
-    if command -v fusion > /dev/null 2>&1; then
-        info "Fusion installed successfully!"
-        fusion --version
+    if command -v mush > /dev/null 2>&1; then
+        info "Mush installed successfully!"
+        mush --version
     else
-        warn "Fusion was installed to ${INSTALL_DIR}/${BINARY_NAME}"
+        warn "Mush was installed to ${INSTALL_DIR}/${BINARY_NAME}"
         warn "Make sure ${INSTALL_DIR} is in your PATH"
     fi
     
     echo ""
-    info "Get started with: fusion install"
+    info "Get started with: mush install"
 }
 
 # Run installer
-install_fusion
+install_mush

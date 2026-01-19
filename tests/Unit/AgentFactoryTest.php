@@ -1,13 +1,13 @@
 <?php
 
-use Myleshyson\Fusion\Agents\ClaudeCode;
-use Myleshyson\Fusion\Agents\Codex;
-use Myleshyson\Fusion\Agents\Copilot;
-use Myleshyson\Fusion\Agents\Cursor;
-use Myleshyson\Fusion\Agents\Gemini;
-use Myleshyson\Fusion\Agents\Junie;
-use Myleshyson\Fusion\Agents\OpenCode;
-use Myleshyson\Fusion\Support\AgentFactory;
+use Myleshyson\Mush\Agents\ClaudeCode;
+use Myleshyson\Mush\Agents\Codex;
+use Myleshyson\Mush\Agents\Copilot;
+use Myleshyson\Mush\Agents\Cursor;
+use Myleshyson\Mush\Agents\Gemini;
+use Myleshyson\Mush\Agents\Junie;
+use Myleshyson\Mush\Agents\OpenCode;
+use Myleshyson\Mush\Support\AgentFactory;
 
 beforeEach(function () {
     $this->artifactPath = __DIR__.'/../artifacts/agent-factory';

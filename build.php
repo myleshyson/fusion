@@ -2,7 +2,7 @@
 <?php
 
 /**
- * Build script for creating a standalone Fusion executable using static-php-cli.
+ * Build script for creating a standalone Mush executable using static-php-cli.
  *
  * This script:
  * 1. Downloads spc (static-php-cli) if not present
@@ -17,14 +17,14 @@
 $phpVersion = '8.4';
 $extensions = 'ctype,dom,filter,iconv,mbstring,phar,posix,tokenizer,pcntl';
 $buildDir = 'builds';
-$outputBinary = "{$buildDir}/fusion";
+$outputBinary = "{$buildDir}/mush";
 
 // Detect OS and architecture
 $os = PHP_OS_FAMILY === 'Darwin' ? 'macos' : 'linux';
 $arch = php_uname('m') === 'arm64' || php_uname('m') === 'aarch64' ? 'aarch64' : 'x86_64';
 $spcUrl = "https://dl.static-php.dev/static-php-cli/spc-bin/nightly/spc-{$os}-{$arch}";
 
-echo "Building Fusion standalone executable\n";
+echo "Building Mush standalone executable\n";
 echo "   OS: {$os}, Arch: {$arch}\n";
 echo "   PHP: {$phpVersion}\n";
 echo "   Extensions: {$extensions}\n\n";
@@ -110,12 +110,12 @@ if ($exitCode !== 0) {
     fwrite(STDERR, "Failed to build PHAR\n");
     exit(1);
 }
-echo "   Built {$buildDir}/fusion.phar\n\n";
+echo "   Built {$buildDir}/mush.phar\n\n";
 
 // Step 7: Combine micro.sfx with PHAR
 echo "Combining micro.sfx + PHAR...\n";
 $microSfx = file_get_contents($microSfxPath);
-$phar = file_get_contents("{$buildDir}/fusion.phar");
+$phar = file_get_contents("{$buildDir}/mush.phar");
 
 if ($microSfx === false || $phar === false) {
     fwrite(STDERR, "Failed to read micro.sfx or PHAR\n");

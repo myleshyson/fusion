@@ -1,6 +1,6 @@
 <?php
 
-namespace Myleshyson\Fusion\Compilers;
+namespace Myleshyson\Mush\Compilers;
 
 class GuidelinesCompiler
 {

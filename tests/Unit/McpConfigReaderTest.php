@@ -1,6 +1,6 @@
 <?php
 
-use Myleshyson\Fusion\Support\McpConfigReader;
+use Myleshyson\Mush\Support\McpConfigReader;
 
 beforeEach(function () {
     $this->artifactPath = __DIR__.'/../artifacts/mcp-reader';

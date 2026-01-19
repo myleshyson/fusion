@@ -1,6 +1,6 @@
 {
-    "main": "bin/fusion",
-    "output": "builds/fusion.phar",
+    "main": "bin/mush",
+    "output": "builds/mush.phar",
     "directories": [
         "src"
     ],
@@ -32,7 +32,7 @@
     "dump-autoload": false,
     "force-autodiscovery": true,
     "banner": [
-        "This file is part of Fusion.",
+        "This file is part of Mush.",
         "",
         "(c) Myles Hyson <myleshyson@ufl.edu>",
         "",

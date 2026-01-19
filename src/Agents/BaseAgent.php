@@ -1,8 +1,8 @@
 <?php
 
-namespace Myleshyson\Fusion\Agents;
+namespace Myleshyson\Mush\Agents;
 
-use Myleshyson\Fusion\Contracts\AgentInterface;
+use Myleshyson\Mush\Contracts\AgentInterface;
 
 abstract class BaseAgent implements AgentInterface
 {

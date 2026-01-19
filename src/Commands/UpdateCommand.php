@@ -1,12 +1,12 @@
 <?php
 
-namespace Myleshyson\Fusion\Commands;
+namespace Myleshyson\Mush\Commands;
 
-use Myleshyson\Fusion\Compilers\GuidelinesCompiler;
-use Myleshyson\Fusion\Compilers\SkillsCompiler;
-use Myleshyson\Fusion\Support\AgentFactory;
-use Myleshyson\Fusion\Support\GitignoreUpdater;
-use Myleshyson\Fusion\Support\McpConfigReader;
+use Myleshyson\Mush\Compilers\GuidelinesCompiler;
+use Myleshyson\Mush\Compilers\SkillsCompiler;
+use Myleshyson\Mush\Support\AgentFactory;
+use Myleshyson\Mush\Support\GitignoreUpdater;
+use Myleshyson\Mush\Support\McpConfigReader;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,9 +46,9 @@ class UpdateCommand extends Command
     {
         /** @var string $workingDirectory */
         $workingDirectory = $input->getOption('working-dir') ?? getcwd();
-        $fusionPath = $workingDirectory.'/.fusion';
+        $fusionPath = $workingDirectory.'/.mush';
 
-        // Check if .fusion directory exists
+        // Check if .mush directory exists
         if (! is_dir($fusionPath)) {
             $output->writeln('<error>Fusion is not initialized in this directory.</error>');
             $output->writeln('Run <info>fusion install</info> first to set up your project.');
@@ -137,7 +137,7 @@ class UpdateCommand extends Command
      */
     protected function formatOutput(string $guidelines, array $skills): string
     {
-        $output = "<fusion-guidelines>\n\n";
+        $output = "<mush-guidelines>\n\n";
         $output .= "=== Guidelines ===\n\n";
         $output .= $guidelines ?: '(No guidelines defined yet)';
         $output .= "\n\n=== Skills ===\n\n";
@@ -155,7 +155,7 @@ class UpdateCommand extends Command
             }
         }
 
-        $output .= "\n</fusion-guidelines>\n";
+        $output .= "\n</mush-guidelines>\n";
 
         return $output;
     }

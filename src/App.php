@@ -1,9 +1,10 @@
 <?php
 
-namespace Myleshyson\Fusion;
+namespace Myleshyson\Mush;
 
-use Myleshyson\Fusion\Commands\InstallCommand;
-use Myleshyson\Fusion\Commands\UpdateCommand;
+use Composer\InstalledVersions;
+use Myleshyson\Mush\Commands\InstallCommand;
+use Myleshyson\Mush\Commands\UpdateCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,13 +13,30 @@ class App extends Application
 {
     public static function build(): self
     {
-        $app = new self('Fusion', '1.0.0');
+        $app = new self('Mush', self::resolveVersion());
         $app->addCommand(new InstallCommand);
         $app->addCommand(new UpdateCommand);
 
-        // No default command - running `fusion` alone shows help
+        // No default command - running `mush` alone shows help
 
         return $app;
+    }
+
+    private static function resolveVersion(): string
+    {
+        // When installed via Composer, get version from installed packages
+        if (class_exists(InstalledVersions::class)) {
+            try {
+                $version = InstalledVersions::getPrettyVersion('myleshyson/mush');
+                if ($version !== null) {
+                    return $version;
+                }
+            } catch (\Exception) {
+                // Fall through to default
+            }
+        }
+
+        return 'dev';
     }
 
     public function getDefinition(): InputDefinition

@@ -1,6 +1,6 @@
 <?php
 
-namespace Myleshyson\Fusion\Agents;
+namespace Myleshyson\Mush\Agents;
 
 class Cursor extends BaseAgent
 {

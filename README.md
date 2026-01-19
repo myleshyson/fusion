@@ -1,64 +1,64 @@
 ```
- ▄▄▄▄▄▄▄▄▄▄▄  ▄         ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄ 
-▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░▌      ▐░▌
-▐░█▀▀▀▀▀▀▀▀▀ ▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀  ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌░▌     ▐░▌
-▐░▌          ▐░▌       ▐░▌▐░▌               ▐░▌     ▐░▌       ▐░▌▐░▌▐░▌    ▐░▌
-▐░█▄▄▄▄▄▄▄▄▄ ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░▌     ▐░▌       ▐░▌▐░▌ ▐░▌   ▐░▌
-▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌     ▐░▌     ▐░▌       ▐░▌▐░▌  ▐░▌  ▐░▌
-▐░█▀▀▀▀▀▀▀▀▀ ▐░▌       ▐░▌ ▀▀▀▀▀▀▀▀▀█░▌     ▐░▌     ▐░▌       ▐░▌▐░▌   ▐░▌ ▐░▌
-▐░▌          ▐░▌       ▐░▌          ▐░▌     ▐░▌     ▐░▌       ▐░▌▐░▌    ▐░▌▐░▌
-▐░▌          ▐░█▄▄▄▄▄▄▄█░▌ ▄▄▄▄▄▄▄▄▄█░▌ ▄▄▄▄█░█▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░▌     ▐░▐░▌
-▐░▌          ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌      ▐░░▌
- ▀            ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  
+ ▄▄       ▄▄  ▄         ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄         ▄ 
+▐░░▌     ▐░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌
+▐░▌░▌   ▐░▐░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░▌       ▐░▌
+▐░▌▐░▌ ▐░▌▐░▌▐░▌       ▐░▌▐░▌          ▐░▌       ▐░▌
+▐░▌ ▐░▐░▌ ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌
+▐░▌  ▐░▌  ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+▐░▌   ▀   ▐░▌▐░▌       ▐░▌ ▀▀▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌
+▐░▌       ▐░▌▐░▌       ▐░▌          ▐░▌▐░▌       ▐░▌
+▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌ ▄▄▄▄▄▄▄▄▄█░▌▐░▌       ▐░▌
+▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌
+ ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀ 
 ```
 
 A CLI tool that syncs AI agent configurations across your team. Define guidelines, skills, and MCP servers once in
-`.fusion/` and automatically sync them to Claude Code, Cursor, Copilot, Gemini, OpenCode, Codex, and Junie.
+`.mush/` and automatically sync them to Claude Code, Cursor, Copilot, Gemini, OpenCode, Codex, and Junie.
 
 ## Installation
 
 ### Quick Install (Recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/myleshyson/fusion/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/myleshyson/mush/main/install.sh | sh
 ```
 
 ### Custom Install Location
 
 ```bash
-FUSION_INSTALL_DIR=~/.local/bin curl -fsSL https://raw.githubusercontent.com/myleshyson/fusion/main/install.sh | sh
+MUSH_INSTALL_DIR=~/.local/bin curl -fsSL https://raw.githubusercontent.com/myleshyson/mush/main/install.sh | sh
 ```
 
 ### Install Specific Version
 
 ```bash
-FUSION_VERSION=v1.0.0 curl -fsSL https://raw.githubusercontent.com/myleshyson/fusion/main/install.sh | sh
+MUSH_VERSION=v1.0.0 curl -fsSL https://raw.githubusercontent.com/myleshyson/mush/main/install.sh | sh
 ```
 
 ### Manual Download
 
 Download the appropriate binary for your platform from
-the [releases page](https://github.com/myleshyson/fusion/releases):
+the [releases page](https://github.com/myleshyson/mush/releases):
 
-- `fusion-linux-x86_64` - Linux (Intel/AMD)
-- `fusion-linux-aarch64` - Linux (ARM64)
-- `fusion-macos-x86_64` - macOS (Intel)
-- `fusion-macos-aarch64` - macOS (Apple Silicon)
-- `fusion-windows-x64.exe` - Windows (64-bit)
+- `mush-linux-x86_64` - Linux (Intel/AMD)
+- `mush-linux-aarch64` - Linux (ARM64)
+- `mush-macos-x86_64` - macOS (Intel)
+- `mush-macos-aarch64` - macOS (Apple Silicon)
+- `mush-windows-x64.exe` - Windows (64-bit)
 
 ### Install via Composer (PHP 8.2+)
 
 If you have PHP and Composer installed:
 
 ```bash
-composer global require myleshyson/fusion
+composer global require myleshyson/mush
 ```
 
 Or add as a dev dependency to your project:
 
 ```bash
-composer require --dev myleshyson/fusion
-./vendor/bin/fusion install
+composer require --dev myleshyson/mush
+./vendor/bin/mush install
 ```
 
 ## Getting Started
@@ -67,16 +67,16 @@ composer require --dev myleshyson/fusion
 
 ```bash
 # Interactive mode - select which agents to configure
-fusion install
+mush install
 
 # Or specify agents directly
-fusion install --claude --cursor --copilot
+mush install --claude --cursor --copilot
 ```
 
-This creates a `.fusion/` directory with:
+This creates a `.mush/` directory with:
 
 ```
-.fusion/
+.mush/
 ├── guidelines/     # Shared guidelines (markdown files)
 ├── skills/         # Reusable skills (subdirectories with SKILL.md)
 └── mcp.json        # MCP server configurations
@@ -84,22 +84,22 @@ This creates a `.fusion/` directory with:
 
 ### Update Agent Files
 
-After modifying your `.fusion/` configuration, sync changes to all detected agents:
+After modifying your `.mush/` configuration, sync changes to all detected agents:
 
 ```bash
-fusion update
+mush update
 ```
 
-Fusion automatically detects which agents are configured in your project and updates their respective files.
+Mush automatically detects which agents are configured in your project and updates their respective files.
 
 ## Configuration
 
 ### Guidelines
 
-Add markdown files to `.fusion/guidelines/` to define shared instructions:
+Add markdown files to `.mush/guidelines/` to define shared instructions:
 
 ```markdown
-<!-- .fusion/guidelines/code-style.md -->
+<!-- .mush/guidelines/code-style.md -->
 
 # Code Style
 
@@ -116,11 +116,11 @@ Guidelines are compiled alphabetically, so prefix filenames with numbers to cont
 
 ### Skills
 
-Skills are reusable instruction sets that agents can invoke. Create a subdirectory in `.fusion/skills/` with a`SKILL.md`
+Skills are reusable instruction sets that agents can invoke. Create a subdirectory in `.mush/skills/` with a`SKILL.md`
 file:
 
 ```markdown
-<!-- .fusion/skills/testing/SKILL.md -->
+<!-- .mush/skills/testing/SKILL.md -->
 ---
 name: testing
 description: Helps write and run tests for the codebase
@@ -139,7 +139,7 @@ The `description` field helps agents decide when to apply the skill.
 
 ### MCP Servers
 
-Configure MCP (Model Context Protocol) servers in `.fusion/mcp.json`:
+Configure MCP (Model Context Protocol) servers in `.mush/mcp.json`:
 
 ```json
 {
@@ -174,11 +174,11 @@ Configure MCP (Model Context Protocol) servers in `.fusion/mcp.json`:
 }
 ```
 
-Fusion transforms this configuration to each agent's expected format.
+Mush transforms this configuration to each agent's expected format.
 
 ### Local Overrides
 
-For personal MCP servers that shouldn't be committed (local databases, personal API tokens), create `.fusion/mcp.override.json`:
+For personal MCP servers that shouldn't be committed (local databases, personal API tokens), create `.mush/mcp.override.json`:
 
 ```json
 {
@@ -199,50 +199,50 @@ For personal MCP servers that shouldn't be committed (local databases, personal 
 }
 ```
 
-Override servers completely replace matching servers from `mcp.json`. This file is automatically added to `.gitignore` during `fusion install`.
+Override servers completely replace matching servers from `mcp.json`. This file is automatically added to `.gitignore` during `mush install`.
 
-For personal guidelines or skills that shouldn't be shared, add them to `.fusion/` and gitignore them. Use the `!` prefix to explicitly track shared files:
+For personal guidelines or skills that shouldn't be shared, add them to `.mush/` and gitignore them. Use the `!` prefix to explicitly track shared files:
 
 ```gitignore
-# Ignore all fusion config by default
-.fusion/guidelines/*
-.fusion/skills/*
+# Ignore all mush config by default
+.mush/guidelines/*
+.mush/skills/*
 
 # Track shared files
-!.fusion/guidelines/code-style.md
-!.fusion/guidelines/testing.md
-!.fusion/skills/api-design/
+!.mush/guidelines/code-style.md
+!.mush/guidelines/testing.md
+!.mush/skills/api-design/
 ```
 
 ## Commands
 
-### `fusion install`
+### `mush install`
 
-Initialize Fusion in a project.
+Initialize Mush in a project.
 
 ```bash
 # Interactive mode
-fusion install
+mush install
 
 # Specify agents
-fusion install --claude --cursor --copilot --gemini --opencode --codex --junie
+mush install --claude --cursor --copilot --gemini --opencode --codex --junie
 
 # All agents
-fusion install --claude --cursor --copilot --gemini --opencode --codex --junie
+mush install --claude --cursor --copilot --gemini --opencode --codex --junie
 ```
 
-### `fusion update`
+### `mush update`
 
-Sync `.fusion/` configuration to all detected agents.
+Sync `.mush/` configuration to all detected agents.
 
 ```bash
 # Auto-detect agents
-fusion update
+mush update
 
 # Custom paths for additional outputs
-fusion update --guideline-path=./custom/RULES.md
-fusion update --skill-path=./custom/skills/
-fusion update --mcp-path=./custom/mcp.json
+mush update --guideline-path=./custom/RULES.md
+mush update --skill-path=./custom/skills/
+mush update --mcp-path=./custom/mcp.json
 ```
 
 ## Supported Agents
@@ -259,21 +259,21 @@ fusion update --mcp-path=./custom/mcp.json
 
 ## Example Workflow
 
-1. **Initialize Fusion**
+1. **Initialize Mush**
    ```bash
    cd my-project
-   fusion install --claude --cursor
+   mush install --claude --cursor
    ```
 
 2. **Add guidelines**
    ```bash
-   echo "# Always use TypeScript" > .fusion/guidelines/typescript.md
+   echo "# Always use TypeScript" > .mush/guidelines/typescript.md
    ```
 
 3. **Add a skill**
    ```bash
-   mkdir -p .fusion/skills/api-design
-   cat > .fusion/skills/api-design/SKILL.md << 'EOF'
+   mkdir -p .mush/skills/api-design
+   cat > .mush/skills/api-design/SKILL.md << 'EOF'
    ---
    name: api-design
    description: Helps design RESTful APIs following best practices
@@ -289,12 +289,12 @@ fusion update --mcp-path=./custom/mcp.json
 
 4. **Sync to agents**
    ```bash
-   fusion update
+   mush update
    ```
 
 5. **Commit and share**
    ```bash
-   git add .fusion/
+   git add .mush/
    git commit -m "Add shared AI agent configuration"
    ```
 

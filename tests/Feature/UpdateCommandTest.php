@@ -1,7 +1,7 @@
 <?php
 
-use Myleshyson\Fusion\App;
-use Myleshyson\Fusion\Commands\UpdateCommand;
+use Myleshyson\Mush\App;
+use Myleshyson\Mush\Commands\UpdateCommand;
 use Zenstruck\Console\Test\TestCommand;
 
 beforeEach(function () {
@@ -15,8 +15,8 @@ afterEach(function () {
 });
 
 it('updates agent files based on auto-detection', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -47,8 +47,8 @@ it('updates agent files based on auto-detection', function () {
 });
 
 it('lists available skills in agent guidelines file', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -93,8 +93,8 @@ it('fails if fusion is not initialized', function () {
 });
 
 it('fails if no agents are detected', function () {
-    // Set up .fusion directory but no agent files
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory but no agent files
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -110,8 +110,8 @@ it('fails if no agents are detected', function () {
 });
 
 it('accepts custom guideline paths', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -130,8 +130,8 @@ it('accepts custom guideline paths', function () {
 });
 
 it('detects multiple agents', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -153,8 +153,8 @@ it('detects multiple agents', function () {
 });
 
 it('accepts custom skill paths', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -181,8 +181,8 @@ it('accepts custom skill paths', function () {
 });
 
 it('accepts custom MCP paths', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -213,8 +213,8 @@ it('accepts custom MCP paths', function () {
 });
 
 it('merges custom MCP path with existing file', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -249,8 +249,8 @@ it('merges custom MCP path with existing file', function () {
 });
 
 it('handles remote servers in custom MCP paths', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
@@ -280,8 +280,8 @@ it('handles remote servers in custom MCP paths', function () {
 });
 
 it('handles absolute paths for custom paths', function () {
-    // Set up .fusion directory
-    $fusionPath = "{$this->artifactPath}/.fusion";
+    // Set up .mush directory
+    $fusionPath = "{$this->artifactPath}/.mush";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
