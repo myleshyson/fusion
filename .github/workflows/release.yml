@@ -28,7 +28,7 @@ jobs:
             spc_arch: aarch64
           - os: macos
             arch: x86_64
-            runner: macos-13
+            runner: macos-15-intel
             spc_os: macos
             spc_arch: x86_64
           - os: macos
