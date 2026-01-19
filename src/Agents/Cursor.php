@@ -22,15 +22,27 @@ class Cursor extends BaseAgent
     public function detectionPaths(): array
     {
         return [
-            '.cursorrules',
+            '.cursorrules',  // Legacy format (still detected for migration)
             '.cursor/',
+            '.cursor/rules/',
             '.cursor/mcp.json',
         ];
     }
 
     public function guidelinesPath(): string
     {
-        return '.cursorrules';
+        return '.cursor/rules/mush.mdc';
+    }
+
+    public function writeGuidelines(string $content): void
+    {
+        $path = $this->fullPath($this->guidelinesPath());
+        $this->ensureDirectoryExists($path);
+
+        // Wrap content with MDC frontmatter for Cursor rules format
+        $mdcContent = "---\nalwaysApply: true\n---\n\n" . $content;
+
+        file_put_contents($path, $mdcContent);
     }
 
     public function skillsPath(): string

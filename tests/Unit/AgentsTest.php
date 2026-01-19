@@ -406,7 +406,7 @@ describe('Cursor', function () {
 
     it('returns correct paths', function () {
         $agent = new Cursor($this->artifactPath);
-        expect($agent->guidelinesPath())->toBe('.cursorrules');
+        expect($agent->guidelinesPath())->toBe('.cursor/rules/mush.mdc');
         expect($agent->skillsPath())->toBe('.cursor/skills/');
         expect($agent->mcpPath())->toBe('.cursor/mcp.json');
     });
@@ -414,10 +414,20 @@ describe('Cursor', function () {
     it('returns correct detection paths', function () {
         $agent = new Cursor($this->artifactPath);
         expect($agent->detectionPaths())->toBe([
-            '.cursorrules',
+            '.cursorrules',  // Legacy format (still detected for migration)
             '.cursor/',
+            '.cursor/rules/',
             '.cursor/mcp.json',
         ]);
+    });
+
+    it('writes guidelines with MDC frontmatter', function () {
+        $agent = new Cursor($this->artifactPath);
+        $agent->writeGuidelines('# Test Guidelines');
+
+        expect("{$this->artifactPath}/.cursor/rules/mush.mdc")->toBeFile();
+        $content = file_get_contents("{$this->artifactPath}/.cursor/rules/mush.mdc");
+        expect($content)->toBe("---\nalwaysApply: true\n---\n\n# Test Guidelines");
     });
 
     it('transforms MCP config correctly', function () {

@@ -59,7 +59,7 @@ it('supports multiple agents via options', function () {
 
     // Verify both agent files were created
     expect("{$this->artifactPath}/.claude/CLAUDE.md")->toBeFile();
-    expect("{$this->artifactPath}/.cursorrules")->toBeFile();
+    expect("{$this->artifactPath}/.cursor/rules/mush.mdc")->toBeFile();
 });
 
 it('supports all available agent options', function () {
@@ -74,7 +74,7 @@ it('supports all available agent options', function () {
     // Verify all agent files were created
     expect("{$this->artifactPath}/.claude/CLAUDE.md")->toBeFile();
     expect("{$this->artifactPath}/AGENTS.md")->toBeFile(); // Used by both OpenCode and Codex
-    expect("{$this->artifactPath}/.cursorrules")->toBeFile();
+    expect("{$this->artifactPath}/.cursor/rules/mush.mdc")->toBeFile();
     expect("{$this->artifactPath}/.github/copilot-instructions.md")->toBeFile();
     expect("{$this->artifactPath}/GEMINI.md")->toBeFile();
     expect("{$this->artifactPath}/.junie/guidelines.md")->toBeFile();

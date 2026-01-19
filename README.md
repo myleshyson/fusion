@@ -250,12 +250,14 @@ mush update --mcp-path=./custom/mcp.json
 | Agent          | Guidelines                        | Skills              | MCP                     |
 |----------------|-----------------------------------|---------------------|-------------------------|
 | Claude Code    | `.claude/CLAUDE.md`               | `.claude/skills/`   | `.claude/mcp.json`      |
-| Cursor         | `.cursorrules`                    | `.cursor/skills/`   | `.cursor/mcp.json`      |
+| Cursor         | `.cursor/rules/mush.mdc`          | `.cursor/skills/`   | `.cursor/mcp.json`      |
 | GitHub Copilot | `.github/copilot-instructions.md` | `.github/skills/`   | `.vscode/mcp.json`      |
 | Gemini         | `GEMINI.md`                       | `.gemini/skills/`   | `.gemini/settings.json` |
 | OpenCode       | `AGENTS.md`                       | `.opencode/skills/` | `opencode.json`         |
-| OpenAI Codex   | `AGENTS.md`                       | `.codex/skills/`    | -                       |
+| OpenAI Codex   | `AGENTS.md`                       | `.codex/skills/`    | -\*                     |
 | Junie          | `.junie/guidelines.md`            | `.junie/skills/`    | `.junie/mcp/mcp.json`   |
+
+\*OpenAI Codex supports MCP via `~/.codex/config.toml`, but only at the global/user level, not per-project. Mush focuses on project-level configuration, so Codex MCP is not currently supported.
 
 ## Example Workflow
 
