@@ -74,8 +74,8 @@ it('lists available skills in agent guidelines file', function () {
     // Verify skills are listed by name in the guidelines file
     $content = file_get_contents("{$this->artifactPath}/.claude/CLAUDE.md");
     expect($content)->toContain('Available skills:');
-    expect($content)->toContain('- tailwind');
-    expect($content)->toContain('- testing');
+    expect($content)->toContain('- **tailwind**');
+    expect($content)->toContain('- **testing**');
 
     // Verify full skill content is NOT in the guidelines file
     expect($content)->not->toContain('Tailwind CSS skill content');

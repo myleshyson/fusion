@@ -68,7 +68,7 @@ it('supports all available agent options', function () {
 
     // Test with all agents
     TestCommand::for($command)
-        ->execute("--working-dir={$this->artifactPath} --claude --opencode --cursor --copilot --gemini --codex --phpstorm")
+        ->execute("--working-dir={$this->artifactPath} --claude --opencode --cursor --copilot --gemini --codex --junie")
         ->assertSuccessful();
 
     // Verify all agent files were created

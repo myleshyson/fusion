@@ -44,7 +44,7 @@ describe('AgentFactory', function () {
             expect($map)->toHaveCount(7);
             expect($map['claude'])->toBe(ClaudeCode::class);
             expect($map['opencode'])->toBe(OpenCode::class);
-            expect($map['phpstorm'])->toBe(Junie::class);
+            expect($map['junie'])->toBe(Junie::class);
             expect($map['gemini'])->toBe(Gemini::class);
             expect($map['copilot'])->toBe(Copilot::class);
             expect($map['codex'])->toBe(Codex::class);
@@ -60,7 +60,7 @@ describe('AgentFactory', function () {
             expect($options)->toHaveCount(7);
             expect($options['claude'])->toBe('Claude Code');
             expect($options['opencode'])->toBe('OpenCode');
-            expect($options['phpstorm'])->toBe('Junie (Junie)');
+            expect($options['junie'])->toBe('Junie');
             expect($options['gemini'])->toBe('Gemini');
             expect($options['copilot'])->toBe('GitHub Copilot');
             expect($options['codex'])->toBe('OpenAI Codex');
@@ -134,8 +134,8 @@ describe('Agent optionName() static method', function () {
         expect(OpenCode::optionName())->toBe('opencode');
     });
 
-    it('Junie returns phpstorm', function () {
-        expect(Junie::optionName())->toBe('phpstorm');
+    it('Junie returns junie', function () {
+        expect(Junie::optionName())->toBe('junie');
     });
 
     it('Gemini returns gemini', function () {

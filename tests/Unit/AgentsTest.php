@@ -907,7 +907,7 @@ describe('Codex', function () {
 describe('Junie', function () {
     it('returns correct name', function () {
         $agent = new Junie($this->artifactPath);
-        expect($agent->name())->toBe('Junie (Junie)');
+        expect($agent->name())->toBe('Junie');
     });
 
     it('returns correct paths', function () {
