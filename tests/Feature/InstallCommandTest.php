@@ -19,18 +19,21 @@ it('initializes a fusion project correctly', function () {
     $command->setApplication(App::build());
 
     TestCommand::for($command)
-        ->execute("--working-dir={$this->artifactPath} --agent=claude-code")
+        ->execute("--working-dir={$this->artifactPath} --claude")
         ->assertSuccessful()
         ->assertOutputContains('Fusion initialized successfully!');
 
     // Verify .fusion directory structure
     expect("{$this->artifactPath}/.fusion")->toBeDirectory();
-    expect("{$this->artifactPath}/.fusion/fusion.yaml")->toBeFile();
     expect("{$this->artifactPath}/.fusion/guidelines")->toBeDirectory();
     expect("{$this->artifactPath}/.fusion/guidelines/.gitignore")->toBeFile();
     expect("{$this->artifactPath}/.fusion/skills")->toBeDirectory();
     expect("{$this->artifactPath}/.fusion/skills/.gitignore")->toBeFile();
     expect("{$this->artifactPath}/.fusion/mcp.json")->toBeFile();
+
+    // Verify agent files were created
+    expect("{$this->artifactPath}/.claude/CLAUDE.md")->toBeFile();
+    expect("{$this->artifactPath}/.claude/mcp.json")->toBeFile();
 });
 
 it('fails if fusion is already initialized', function () {
@@ -41,21 +44,38 @@ it('fails if fusion is already initialized', function () {
     $command->setApplication(App::build());
 
     TestCommand::for($command)
-        ->execute("--working-dir={$this->artifactPath} --agent=claude-code")
+        ->execute("--working-dir={$this->artifactPath} --claude")
         ->assertStatusCode(1)
         ->assertOutputContains('already initialized');
 });
 
-it('supports multiple agents via --agent option', function () {
+it('supports multiple agents via options', function () {
     $command = new InstallCommand;
     $command->setApplication(App::build());
 
     TestCommand::for($command)
-        ->execute("--working-dir={$this->artifactPath} --agent=claude-code --agent=cursor")
+        ->execute("--working-dir={$this->artifactPath} --claude --cursor")
         ->assertSuccessful();
 
-    // Verify fusion.yaml contains both agents
-    $config = file_get_contents("{$this->artifactPath}/.fusion/fusion.yaml");
-    expect($config)->toContain('claude-code');
-    expect($config)->toContain('cursor');
+    // Verify both agent files were created
+    expect("{$this->artifactPath}/.claude/CLAUDE.md")->toBeFile();
+    expect("{$this->artifactPath}/.cursorrules")->toBeFile();
+});
+
+it('supports all available agent options', function () {
+    $command = new InstallCommand;
+    $command->setApplication(App::build());
+
+    // Test with all agents
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath} --claude --opencode --cursor --copilot --gemini --codex --phpstorm")
+        ->assertSuccessful();
+
+    // Verify all agent files were created
+    expect("{$this->artifactPath}/.claude/CLAUDE.md")->toBeFile();
+    expect("{$this->artifactPath}/AGENTS.md")->toBeFile(); // Used by both OpenCode and Codex
+    expect("{$this->artifactPath}/.cursorrules")->toBeFile();
+    expect("{$this->artifactPath}/.github/copilot-instructions.md")->toBeFile();
+    expect("{$this->artifactPath}/GEMINI.md")->toBeFile();
+    expect("{$this->artifactPath}/.junie/guidelines.md")->toBeFile();
 });

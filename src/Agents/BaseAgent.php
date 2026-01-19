@@ -10,6 +10,12 @@ abstract class BaseAgent implements AgentInterface
         protected string $workingDirectory
     ) {}
 
+    /**
+     * Get the CLI option name for this agent.
+     * Must be implemented by each agent class.
+     */
+    abstract public static function optionName(): string;
+
     abstract public function name(): string;
 
     abstract public function guidelinesPath(): string;
@@ -86,6 +92,11 @@ abstract class BaseAgent implements AgentInterface
 
     public function writeMcpConfig(array $servers): void
     {
+        // Skip if MCP is not supported for this agent
+        if ($this->mcpPath() === '') {
+            return;
+        }
+
         $path = $this->fullPath($this->mcpPath());
         $this->ensureDirectoryExists($path);
 
@@ -94,7 +105,8 @@ abstract class BaseAgent implements AgentInterface
         if (file_exists($path)) {
             $content = file_get_contents($path);
             if ($content !== false) {
-                $existingConfig = json_decode($content, true) ?? [];
+                $decoded = json_decode($content, true);
+                $existingConfig = is_array($decoded) ? $decoded : [];
             }
         }
 

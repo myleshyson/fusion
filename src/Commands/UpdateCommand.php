@@ -11,11 +11,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 #[AsCommand(
     name: 'update',
-    description: 'Sync all configured agent files with current guidelines, skills, and MCP config.',
+    description: 'Sync all detected agent files with current guidelines, skills, and MCP config.',
 )]
 class UpdateCommand extends Command
 {
@@ -44,24 +43,23 @@ class UpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var string $workingDirectory */
         $workingDirectory = $input->getOption('working-dir') ?? getcwd();
         $fusionPath = $workingDirectory.'/.fusion';
-        $configPath = $fusionPath.'/fusion.yaml';
 
-        // Check if .fusion/fusion.yaml exists
-        if (! file_exists($configPath)) {
+        // Check if .fusion directory exists
+        if (! is_dir($fusionPath)) {
             $output->writeln('<error>Fusion is not initialized in this directory.</error>');
             $output->writeln('Run <info>fusion install</info> first to set up your project.');
 
             return Command::FAILURE;
         }
 
-        // Read fusion.yaml
-        $config = Yaml::parseFile($configPath);
-        $configuredAgents = $config['agents'] ?? [];
+        // Auto-detect which agents are configured in the project
+        $agents = AgentFactory::detectAll($workingDirectory);
 
-        if (empty($configuredAgents)) {
-            $output->writeln('<error>No agents configured in fusion.yaml.</error>');
+        if (empty($agents)) {
+            $output->writeln('<error>No agents detected in this project.</error>');
             $output->writeln('Run <info>fusion install</info> to configure agents.');
 
             return Command::FAILURE;
@@ -80,8 +78,7 @@ class UpdateCommand extends Command
         // Read MCP config
         $mcpConfig = $this->readMcpConfig($fusionPath);
 
-        // Write to each configured agent's paths
-        $agents = AgentFactory::fromArray($configuredAgents, $workingDirectory);
+        // Write to each detected agent's paths
         $writtenPaths = [];
 
         foreach ($agents as $agent) {
@@ -91,14 +88,19 @@ class UpdateCommand extends Command
 
             $writtenPaths[] = $agent->guidelinesPath();
             $writtenPaths[] = $agent->skillsPath();
-            $writtenPaths[] = $agent->mcpPath();
+            if ($agent->mcpPath() !== '') {
+                $writtenPaths[] = $agent->mcpPath();
+            }
 
             $output->writeln("  Updated <info>{$agent->name()}</info>");
         }
 
         // Handle additional custom paths
+        /** @var string[] $customGuidelinePaths */
         $customGuidelinePaths = $input->getOption('guideline-path');
+        /** @var string[] $customSkillPaths */
         $customSkillPaths = $input->getOption('skill-path');
+        /** @var string[] $customMcpPaths */
         $customMcpPaths = $input->getOption('mcp-path');
 
         foreach ($customGuidelinePaths as $path) {
@@ -166,7 +168,11 @@ class UpdateCommand extends Command
         }
 
         $config = json_decode($content, true);
+        if (! is_array($config)) {
+            return [];
+        }
 
+        /** @var array<string, mixed> */
         return $config['servers'] ?? [];
     }
 
@@ -202,6 +208,10 @@ class UpdateCommand extends Command
         // For custom paths, use a generic format (same as Claude/Cursor)
         $mcpServers = [];
         foreach ($mcpConfig as $name => $config) {
+            if (! is_array($config)) {
+                continue;
+            }
+
             $server = [];
 
             if (isset($config['command'])) {
@@ -228,7 +238,8 @@ class UpdateCommand extends Command
         if (file_exists($fullPath)) {
             $content = file_get_contents($fullPath);
             if ($content !== false) {
-                $existingConfig = json_decode($content, true) ?? [];
+                $decoded = json_decode($content, true);
+                $existingConfig = is_array($decoded) ? $decoded : [];
             }
         }
 

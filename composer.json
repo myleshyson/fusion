@@ -29,7 +29,8 @@
     "pestphp/pest": "^4.3",
     "symfony/var-dumper": "^8.0",
     "zenstruck/console-test": "^1.8",
-    "mockery/mockery": "^1.6"
+    "mockery/mockery": "^1.6",
+    "pestphp/pest-plugin-mutate": "^4.0"
   },
   "scripts": {
     "pint": "pint",

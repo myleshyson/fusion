@@ -4,9 +4,28 @@ namespace Myleshyson\Fusion\Agents;
 
 class OpenCode extends BaseAgent
 {
+    public static function optionName(): string
+    {
+        return 'opencode';
+    }
+
     public function name(): string
     {
         return 'OpenCode';
+    }
+
+    /**
+     * OpenCode can be detected via multiple paths.
+     *
+     * @return array<string>
+     */
+    public function detectionPaths(): array
+    {
+        return [
+            'AGENTS.md',
+            'opencode.json',
+            '.opencode/',
+        ];
     }
 
     public function guidelinesPath(): string
@@ -29,6 +48,10 @@ class OpenCode extends BaseAgent
         $mcpConfig = [];
 
         foreach ($servers as $name => $config) {
+            if (! is_array($config)) {
+                continue;
+            }
+
             $server = [];
 
             if (isset($config['command'])) {
@@ -56,8 +79,11 @@ class OpenCode extends BaseAgent
     protected function mergeMcpConfig(array $existing, array $new): array
     {
         // Merge mcp key specifically, preserving other opencode.json settings
-        if (isset($existing['mcp']) && isset($new['mcp'])) {
-            $new['mcp'] = array_replace_recursive($existing['mcp'], $new['mcp']);
+        $existingMcp = isset($existing['mcp']) && is_array($existing['mcp']) ? $existing['mcp'] : [];
+        $newMcp = isset($new['mcp']) && is_array($new['mcp']) ? $new['mcp'] : [];
+
+        if (! empty($existingMcp) && ! empty($newMcp)) {
+            $new['mcp'] = array_replace_recursive($existingMcp, $newMcp);
         }
 
         return array_replace_recursive($existing, $new);

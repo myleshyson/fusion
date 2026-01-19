@@ -21,7 +21,8 @@ class GitignoreUpdater
         $existingContent = '';
         $existingEntries = [];
         if (file_exists($gitignorePath)) {
-            $existingContent = file_get_contents($gitignorePath);
+            $content = file_get_contents($gitignorePath);
+            $existingContent = $content !== false ? $content : '';
             $existingEntries = array_filter(
                 array_map('trim', explode("\n", $existingContent)),
                 fn ($line) => $line !== '' && ! str_starts_with($line, '#')
@@ -42,7 +43,7 @@ class GitignoreUpdater
         }
 
         // Add new paths to .gitignore
-        $content = rtrim($existingContent);
+        $content = $existingContent !== '' ? rtrim($existingContent) : '';
         if ($content !== '') {
             $content .= "\n\n";
         }
@@ -62,8 +63,13 @@ class GitignoreUpdater
             ? substr($path, strlen($this->workingDirectory))
             : $path;
 
-        // Remove leading ./ or /
-        $relativePath = ltrim($relativePath, './');
+        // Remove leading / first
+        $relativePath = ltrim($relativePath, '/');
+
+        // Remove leading ./ (as a pair, not individually) to preserve paths like .claude/
+        if (str_starts_with($relativePath, './')) {
+            $relativePath = substr($relativePath, 2);
+        }
 
         // Add leading / for .gitignore (means root of repo)
         return '/'.$relativePath;

@@ -4,9 +4,28 @@ namespace Myleshyson\Fusion\Agents;
 
 class Copilot extends BaseAgent
 {
+    public static function optionName(): string
+    {
+        return 'copilot';
+    }
+
     public function name(): string
     {
         return 'GitHub Copilot';
+    }
+
+    /**
+     * Copilot can be detected via multiple paths.
+     *
+     * @return array<string>
+     */
+    public function detectionPaths(): array
+    {
+        return [
+            '.github/copilot-instructions.md',
+            '.vscode/mcp.json',
+            '.github/',
+        ];
     }
 
     public function guidelinesPath(): string
@@ -30,6 +49,10 @@ class Copilot extends BaseAgent
         $mcpServers = [];
 
         foreach ($servers as $name => $config) {
+            if (! is_array($config)) {
+                continue;
+            }
+
             $server = [];
 
             if (isset($config['command'])) {
@@ -57,8 +80,11 @@ class Copilot extends BaseAgent
 
     protected function mergeMcpConfig(array $existing, array $new): array
     {
-        if (isset($existing['servers']) && isset($new['servers'])) {
-            $new['servers'] = array_replace_recursive($existing['servers'], $new['servers']);
+        $existingServers = isset($existing['servers']) && is_array($existing['servers']) ? $existing['servers'] : [];
+        $newServers = isset($new['servers']) && is_array($new['servers']) ? $new['servers'] : [];
+
+        if (! empty($existingServers) && ! empty($newServers)) {
+            $new['servers'] = array_replace_recursive($existingServers, $newServers);
         }
 
         return array_replace_recursive($existing, $new);

@@ -4,6 +4,11 @@ namespace Myleshyson\Fusion\Agents;
 
 class Gemini extends BaseAgent
 {
+    public static function optionName(): string
+    {
+        return 'gemini';
+    }
+
     public function name(): string
     {
         return 'Gemini';
@@ -21,7 +26,7 @@ class Gemini extends BaseAgent
 
     public function mcpPath(): string
     {
-        return '.gemini/mcp.json';
+        return '.gemini/settings.json';
     }
 
     protected function transformMcpConfig(array $servers): array
@@ -30,6 +35,10 @@ class Gemini extends BaseAgent
         $mcpServers = [];
 
         foreach ($servers as $name => $config) {
+            if (! is_array($config)) {
+                continue;
+            }
+
             $server = [];
 
             if (isset($config['command'])) {
@@ -56,8 +65,11 @@ class Gemini extends BaseAgent
 
     protected function mergeMcpConfig(array $existing, array $new): array
     {
-        if (isset($existing['mcpServers']) && isset($new['mcpServers'])) {
-            $new['mcpServers'] = array_replace_recursive($existing['mcpServers'], $new['mcpServers']);
+        $existingServers = isset($existing['mcpServers']) && is_array($existing['mcpServers']) ? $existing['mcpServers'] : [];
+        $newServers = isset($new['mcpServers']) && is_array($new['mcpServers']) ? $new['mcpServers'] : [];
+
+        if (! empty($existingServers) && ! empty($newServers)) {
+            $new['mcpServers'] = array_replace_recursive($existingServers, $newServers);
         }
 
         return array_replace_recursive($existing, $new);

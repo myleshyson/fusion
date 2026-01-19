@@ -4,6 +4,11 @@ namespace Myleshyson\Fusion\Agents;
 
 class PhpStorm extends BaseAgent
 {
+    public static function optionName(): string
+    {
+        return 'phpstorm';
+    }
+
     public function name(): string
     {
         return 'PhpStorm (Junie)';
@@ -21,7 +26,7 @@ class PhpStorm extends BaseAgent
 
     public function mcpPath(): string
     {
-        return '.junie/mcp.json';
+        return '.junie/mcp/mcp.json';
     }
 
     protected function transformMcpConfig(array $servers): array
@@ -30,6 +35,10 @@ class PhpStorm extends BaseAgent
         $mcpServers = [];
 
         foreach ($servers as $name => $config) {
+            if (! is_array($config)) {
+                continue;
+            }
+
             $server = [];
 
             if (isset($config['command'])) {
@@ -56,8 +65,11 @@ class PhpStorm extends BaseAgent
 
     protected function mergeMcpConfig(array $existing, array $new): array
     {
-        if (isset($existing['mcpServers']) && isset($new['mcpServers'])) {
-            $new['mcpServers'] = array_replace_recursive($existing['mcpServers'], $new['mcpServers']);
+        $existingServers = isset($existing['mcpServers']) && is_array($existing['mcpServers']) ? $existing['mcpServers'] : [];
+        $newServers = isset($new['mcpServers']) && is_array($new['mcpServers']) ? $new['mcpServers'] : [];
+
+        if (! empty($existingServers) && ! empty($newServers)) {
+            $new['mcpServers'] = array_replace_recursive($existingServers, $newServers);
         }
 
         return array_replace_recursive($existing, $new);

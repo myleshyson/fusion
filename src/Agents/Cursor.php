@@ -4,9 +4,28 @@ namespace Myleshyson\Fusion\Agents;
 
 class Cursor extends BaseAgent
 {
+    public static function optionName(): string
+    {
+        return 'cursor';
+    }
+
     public function name(): string
     {
         return 'Cursor';
+    }
+
+    /**
+     * Cursor can be detected via multiple paths.
+     *
+     * @return array<string>
+     */
+    public function detectionPaths(): array
+    {
+        return [
+            '.cursorrules',
+            '.cursor/',
+            '.cursor/mcp.json',
+        ];
     }
 
     public function guidelinesPath(): string
@@ -30,6 +49,10 @@ class Cursor extends BaseAgent
         $mcpServers = [];
 
         foreach ($servers as $name => $config) {
+            if (! is_array($config)) {
+                continue;
+            }
+
             $server = [];
 
             if (isset($config['command'])) {
@@ -56,8 +79,11 @@ class Cursor extends BaseAgent
 
     protected function mergeMcpConfig(array $existing, array $new): array
     {
-        if (isset($existing['mcpServers']) && isset($new['mcpServers'])) {
-            $new['mcpServers'] = array_replace_recursive($existing['mcpServers'], $new['mcpServers']);
+        $existingServers = isset($existing['mcpServers']) && is_array($existing['mcpServers']) ? $existing['mcpServers'] : [];
+        $newServers = isset($new['mcpServers']) && is_array($new['mcpServers']) ? $new['mcpServers'] : [];
+
+        if (! empty($existingServers) && ! empty($newServers)) {
+            $new['mcpServers'] = array_replace_recursive($existingServers, $newServers);
         }
 
         return array_replace_recursive($existing, $new);

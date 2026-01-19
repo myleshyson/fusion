@@ -6,4 +6,23 @@ fusion-*
 box.phar
 spc
 buildroot
+pkgroot
+log
+downloads
+source
 craft.yml
+
+# Fusion generated files
+/.claude/CLAUDE.md
+/.claude/skills/
+/.claude/mcp.json
+
+# Fusion generated files
+/AGENTS.md
+/.opencode/skills/
+/opencode.json
+/.github/copilot-instructions.md
+/.github/skills/
+/.vscode/mcp.json
+/AGENTS.md
+/.codex/skills/

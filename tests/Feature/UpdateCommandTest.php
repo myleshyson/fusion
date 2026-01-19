@@ -2,7 +2,6 @@
 
 use Myleshyson\Fusion\App;
 use Myleshyson\Fusion\Commands\UpdateCommand;
-use Symfony\Component\Yaml\Yaml;
 use Zenstruck\Console\Test\TestCommand;
 
 beforeEach(function () {
@@ -15,17 +14,12 @@ afterEach(function () {
     cleanDirectory($this->artifactPath);
 });
 
-it('updates agent files from fusion config', function () {
-    // Set up .fusion directory with config
+it('updates agent files based on auto-detection', function () {
+    // Set up .fusion directory
     $fusionPath = "{$this->artifactPath}/.fusion";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
-
-    // Write fusion.yaml
-    file_put_contents("{$fusionPath}/fusion.yaml", Yaml::dump([
-        'agents' => ['claude-code'],
-    ]));
 
     // Write mcp.json
     file_put_contents("{$fusionPath}/mcp.json", json_encode([
@@ -35,6 +29,10 @@ it('updates agent files from fusion config', function () {
     // Write a guideline
     file_put_contents("{$fusionPath}/guidelines/test.md", '# Test Guideline');
 
+    // Create an existing Claude Code config file to trigger detection
+    mkdir("{$this->artifactPath}/.claude", 0777, true);
+    file_put_contents("{$this->artifactPath}/.claude/CLAUDE.md", '# Placeholder');
+
     $command = new UpdateCommand;
     $command->setApplication(App::build());
 
@@ -42,6 +40,10 @@ it('updates agent files from fusion config', function () {
         ->execute("--working-dir={$this->artifactPath}")
         ->assertSuccessful()
         ->assertOutputContains('Updated Claude Code');
+
+    // Verify the guideline content was written
+    $content = file_get_contents("{$this->artifactPath}/.claude/CLAUDE.md");
+    expect($content)->toContain('Test Guideline');
 });
 
 it('fails if fusion is not initialized', function () {
@@ -54,17 +56,33 @@ it('fails if fusion is not initialized', function () {
         ->assertOutputContains('not initialized');
 });
 
-it('accepts custom guideline paths', function () {
-    // Set up .fusion directory with config
+it('fails if no agents are detected', function () {
+    // Set up .fusion directory but no agent files
     $fusionPath = "{$this->artifactPath}/.fusion";
     mkdir($fusionPath, 0777, true);
     mkdir("{$fusionPath}/guidelines", 0777, true);
     mkdir("{$fusionPath}/skills", 0777, true);
-
-    file_put_contents("{$fusionPath}/fusion.yaml", Yaml::dump([
-        'agents' => ['claude-code'],
-    ]));
     file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath}")
+        ->assertStatusCode(1)
+        ->assertOutputContains('No agents detected');
+});
+
+it('accepts custom guideline paths', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+
+    // Create an existing Cursor config file to trigger detection
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
 
     $command = new UpdateCommand;
     $command->setApplication(App::build());
@@ -73,4 +91,178 @@ it('accepts custom guideline paths', function () {
         ->execute("--working-dir={$this->artifactPath} --guideline-path=./custom/RULES.md")
         ->assertSuccessful()
         ->assertOutputContains('custom guideline path');
+});
+
+it('detects multiple agents', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+
+    // Create config files for multiple agents
+    mkdir("{$this->artifactPath}/.claude", 0777, true);
+    file_put_contents("{$this->artifactPath}/.claude/CLAUDE.md", '# Placeholder');
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath}")
+        ->assertSuccessful()
+        ->assertOutputContains('Updated Claude Code')
+        ->assertOutputContains('Updated Cursor');
+});
+
+it('accepts custom skill paths', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+
+    // Write a skill
+    file_put_contents("{$fusionPath}/skills/my-skill.md", '# My Skill Content');
+
+    // Create an existing Cursor config file to trigger detection
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath} --skill-path=./custom/skills/")
+        ->assertSuccessful()
+        ->assertOutputContains('custom skill path');
+
+    // Verify skill was written to custom path
+    expect("{$this->artifactPath}/custom/skills/my-skill.md")->toBeFile();
+    expect(file_get_contents("{$this->artifactPath}/custom/skills/my-skill.md"))->toContain('My Skill Content');
+});
+
+it('accepts custom MCP paths', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+        'servers' => [
+            'test-server' => [
+                'command' => ['npx', 'test-server'],
+                'env' => ['KEY' => 'value'],
+            ],
+        ],
+    ]));
+
+    // Create an existing Cursor config file to trigger detection
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath} --mcp-path=./custom/mcp.json")
+        ->assertSuccessful()
+        ->assertOutputContains('custom MCP path');
+
+    // Verify MCP config was written to custom path
+    expect("{$this->artifactPath}/custom/mcp.json")->toBeFile();
+    $config = json_decode(file_get_contents("{$this->artifactPath}/custom/mcp.json"), true);
+    expect($config['mcpServers']['test-server']['command'])->toBe('npx');
+});
+
+it('merges custom MCP path with existing file', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+        'servers' => [
+            'new-server' => ['command' => ['npx', 'new']],
+        ],
+    ]));
+
+    // Create existing custom MCP file
+    mkdir("{$this->artifactPath}/custom", 0777, true);
+    file_put_contents("{$this->artifactPath}/custom/mcp.json", json_encode([
+        'mcpServers' => ['existing' => ['command' => 'old']],
+        'otherSetting' => true,
+    ]));
+
+    // Create an existing Cursor config file to trigger detection
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath} --mcp-path=./custom/mcp.json")
+        ->assertSuccessful();
+
+    // Verify merge happened correctly
+    $config = json_decode(file_get_contents("{$this->artifactPath}/custom/mcp.json"), true);
+    expect($config['mcpServers']['existing'])->toBe(['command' => 'old']);
+    expect($config['mcpServers']['new-server']['command'])->toBe('npx');
+    expect($config['otherSetting'])->toBeTrue();
+});
+
+it('handles remote servers in custom MCP paths', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+        'servers' => [
+            'remote-server' => [
+                'url' => 'https://api.example.com/mcp',
+                'headers' => ['Auth' => 'token'],
+            ],
+        ],
+    ]));
+
+    // Create an existing Cursor config file to trigger detection
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath} --mcp-path=./custom/mcp.json")
+        ->assertSuccessful();
+
+    // Verify remote server was written correctly
+    $config = json_decode(file_get_contents("{$this->artifactPath}/custom/mcp.json"), true);
+    expect($config['mcpServers']['remote-server']['url'])->toBe('https://api.example.com/mcp');
+    expect($config['mcpServers']['remote-server']['headers'])->toBe(['Auth' => 'token']);
+});
+
+it('handles absolute paths for custom paths', function () {
+    // Set up .fusion directory
+    $fusionPath = "{$this->artifactPath}/.fusion";
+    mkdir($fusionPath, 0777, true);
+    mkdir("{$fusionPath}/guidelines", 0777, true);
+    mkdir("{$fusionPath}/skills", 0777, true);
+    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+    file_put_contents("{$fusionPath}/guidelines/test.md", '# Test');
+
+    // Create an existing Cursor config file to trigger detection
+    file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
+
+    // Use absolute path for custom guideline
+    $absolutePath = "{$this->artifactPath}/absolute/RULES.md";
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath} --guideline-path={$absolutePath}")
+        ->assertSuccessful();
+
+    expect($absolutePath)->toBeFile();
 });

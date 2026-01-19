@@ -4,7 +4,6 @@ namespace Myleshyson\Fusion\Commands;
 
 use Myleshyson\Fusion\Compilers\GuidelinesCompiler;
 use Myleshyson\Fusion\Compilers\SkillsCompiler;
-use Myleshyson\Fusion\Enums\Agent;
 use Myleshyson\Fusion\Support\AgentFactory;
 use Myleshyson\Fusion\Support\GitignoreUpdater;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -12,7 +11,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 use function Laravel\Prompts\multiselect;
 
@@ -24,16 +22,21 @@ class InstallCommand extends Command
 {
     protected function configure(): void
     {
-        $this->addOption(
-            'agent',
-            'a',
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-            'Agent(s) to install (can be specified multiple times for non-interactive mode)'
-        );
+        // Dynamically add options for each agent
+        foreach (AgentFactory::agentClasses() as $agentClass) {
+            $optionName = $agentClass::optionName();
+            $this->addOption(
+                $optionName,
+                null,
+                InputOption::VALUE_NONE,
+                "Install support for {$optionName}"
+            );
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var string $workingDirectory */
         $workingDirectory = $input->getOption('working-dir') ?? getcwd();
         $fusionPath = $workingDirectory.'/.fusion';
 
@@ -45,23 +48,11 @@ class InstallCommand extends Command
             return Command::FAILURE;
         }
 
-        // Get agents from option or prompt interactively
-        $agentOptions = $input->getOption('agent');
-        if (! empty($agentOptions)) {
-            $selectedAgents = $agentOptions;
-        } else {
-            $selectedAgents = multiselect(
-                label: 'Which agents would you like to support?',
-                options: Agent::options(),
-                required: true,
-            );
-        }
+        // Get agents from options or prompt interactively
+        $selectedAgents = $this->getSelectedAgents($input, $workingDirectory);
 
         // Create .fusion directory structure
         $this->createFusionStructure($fusionPath);
-
-        // Write fusion.yaml with selected agents
-        $this->writeFusionConfig($fusionPath, $selectedAgents);
 
         // Write empty mcp.json template
         $this->writeMcpTemplate($fusionPath);
@@ -80,7 +71,7 @@ class InstallCommand extends Command
         $mcpConfig = $this->readMcpConfig($fusionPath);
 
         // Write to each selected agent's paths
-        $agents = AgentFactory::fromArray($selectedAgents, $workingDirectory);
+        $agents = AgentFactory::fromOptionNames($selectedAgents, $workingDirectory);
         $writtenPaths = [];
 
         foreach ($agents as $agent) {
@@ -90,7 +81,9 @@ class InstallCommand extends Command
 
             $writtenPaths[] = $agent->guidelinesPath();
             $writtenPaths[] = $agent->skillsPath();
-            $writtenPaths[] = $agent->mcpPath();
+            if ($agent->mcpPath() !== '') {
+                $writtenPaths[] = $agent->mcpPath();
+            }
         }
 
         // Update .gitignore
@@ -108,6 +101,37 @@ class InstallCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * Get selected agents from CLI options or interactive prompt.
+     *
+     * @return string[]
+     */
+    protected function getSelectedAgents(InputInterface $input, string $workingDirectory): array
+    {
+        // Check if any agent options were provided
+        $selectedFromOptions = [];
+        foreach (AgentFactory::agentClasses() as $agentClass) {
+            $optionName = $agentClass::optionName();
+            if ($input->getOption($optionName)) {
+                $selectedFromOptions[] = $optionName;
+            }
+        }
+
+        if (! empty($selectedFromOptions)) {
+            return $selectedFromOptions;
+        }
+
+        // No options provided, prompt interactively
+        /** @var string[] $selected */
+        $selected = multiselect(
+            label: 'Which agents would you like to support?',
+            options: AgentFactory::promptOptions($workingDirectory),
+            required: true,
+        );
+
+        return $selected;
+    }
+
     protected function createFusionStructure(string $fusionPath): void
     {
         // Create directories
@@ -120,21 +144,6 @@ class InstallCommand extends Command
         $gitignoreContent = "*\n!.gitignore\n";
         file_put_contents($fusionPath.'/guidelines/.gitignore', $gitignoreContent);
         file_put_contents($fusionPath.'/skills/.gitignore', $gitignoreContent);
-    }
-
-    /**
-     * @param  string[]  $agents
-     */
-    protected function writeFusionConfig(string $fusionPath, array $agents): void
-    {
-        $config = [
-            'agents' => $agents,
-        ];
-
-        file_put_contents(
-            $fusionPath.'/fusion.yaml',
-            Yaml::dump($config, 2, 2)
-        );
     }
 
     protected function writeMcpTemplate(string $fusionPath): void
@@ -151,6 +160,9 @@ class InstallCommand extends Command
         );
     }
 
+    /**
+     * @param  array<string, string>  $skills
+     */
     protected function formatOutput(string $guidelines, array $skills): string
     {
         $output = "<fusion-guidelines>\n\n";
@@ -185,7 +197,11 @@ class InstallCommand extends Command
         }
 
         $config = json_decode($content, true);
+        if (! is_array($config)) {
+            return [];
+        }
 
+        /** @var array<string, mixed> */
         return $config['servers'] ?? [];
     }
 }
