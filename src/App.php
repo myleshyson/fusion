@@ -14,8 +14,15 @@ class App extends Application
     public static function build(): self
     {
         $app = new self('Mush', self::resolveVersion());
-        $app->addCommand(new InstallCommand);
-        $app->addCommand(new UpdateCommand);
+
+        // Use addCommand if available (Symfony 7.4+), fall back to add for older versions
+        if (method_exists($app, 'addCommand')) {
+            $app->addCommand(new InstallCommand);
+            $app->addCommand(new UpdateCommand);
+        } else {
+            $app->add(new InstallCommand);
+            $app->add(new UpdateCommand);
+        }
 
         // No default command - running `mush` alone shows help
 
