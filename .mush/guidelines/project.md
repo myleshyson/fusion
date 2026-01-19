@@ -1,5 +1,36 @@
 # Project Guidelines
 
+## About Mush
+
+Mush is a CLI tool that syncs AI coding agent instructions across multiple agents. It allows you to write your guidelines, skills, and MCP server configurations once in a `.mush/` directory and automatically generates the appropriate configuration files for each supported agent.
+
+### Supported Agents
+
+- **Claude Code** - Anthropic's CLI coding agent
+- **Cursor** - AI-powered code editor
+- **GitHub Copilot** - GitHub's AI pair programmer
+- **OpenAI Codex CLI** - OpenAI's coding agent
+- **Gemini Code Assist** - Google's AI coding assistant
+- **JetBrains Junie** - JetBrains' AI assistant
+- **OpenCode** - Open source AI coding agent
+
+### Key Features
+
+- **Guidelines**: Write markdown files in `.mush/guidelines/` that get compiled into each agent's instruction file
+- **Skills**: Define reusable skills in `.mush/skills/` with frontmatter metadata
+- **MCP Servers**: Configure MCP servers once in `.mush/mcp.json` and have them transformed to each agent's format
+- **Auto-detection**: Automatically detects which agents are in use based on existing config files
+
+### Usage
+
+```bash
+# Initialize mush in a project
+./bin/mush init
+
+# Update all detected agent files
+./bin/mush update
+```
+
 ## Git Workflow
 
 - **Always ask permission before pushing** anything to the repository
