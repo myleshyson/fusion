@@ -1,6 +1,7 @@
 {
   "name": "myleshyson/mush",
   "description": "A simple tool to manage AI guideline configurations",
+  "license": "MIT",
   "bin": ["bin/mush"],
   "autoload": {
     "psr-4": {
