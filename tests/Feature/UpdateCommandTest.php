@@ -16,18 +16,18 @@ afterEach(function () {
 
 it('updates agent files based on auto-detection', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
 
     // Write mcp.json
-    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+    file_put_contents("{$mushPath}/mcp.json", json_encode([
         'servers' => [],
     ]));
 
     // Write a guideline
-    file_put_contents("{$fusionPath}/guidelines/test.md", '# Test Guideline');
+    file_put_contents("{$mushPath}/guidelines/test.md", '# Test Guideline');
 
     // Create an existing Claude Code config file to trigger detection
     mkdir("{$this->artifactPath}/.claude", 0777, true);
@@ -48,17 +48,17 @@ it('updates agent files based on auto-detection', function () {
 
 it('lists available skills in agent guidelines file', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
 
     // Create skills using subdirectory structure
-    mkdir("{$fusionPath}/skills/tailwind", 0777, true);
-    mkdir("{$fusionPath}/skills/testing", 0777, true);
-    file_put_contents("{$fusionPath}/skills/tailwind/SKILL.md", '# Tailwind CSS skill content');
-    file_put_contents("{$fusionPath}/skills/testing/SKILL.md", '# Testing skill content');
+    mkdir("{$mushPath}/skills/tailwind", 0777, true);
+    mkdir("{$mushPath}/skills/testing", 0777, true);
+    file_put_contents("{$mushPath}/skills/tailwind/SKILL.md", '# Tailwind CSS skill content');
+    file_put_contents("{$mushPath}/skills/testing/SKILL.md", '# Testing skill content');
 
     // Create an existing Claude Code config file to trigger detection
     mkdir("{$this->artifactPath}/.claude", 0777, true);
@@ -82,7 +82,7 @@ it('lists available skills in agent guidelines file', function () {
     expect($content)->not->toContain('Testing skill content');
 });
 
-it('fails if fusion is not initialized', function () {
+it('fails if mush is not initialized', function () {
     $command = new UpdateCommand;
     $command->setApplication(App::build());
 
@@ -94,11 +94,11 @@ it('fails if fusion is not initialized', function () {
 
 it('fails if no agents are detected', function () {
     // Set up .mush directory but no agent files
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
 
     $command = new UpdateCommand;
     $command->setApplication(App::build());
@@ -111,11 +111,11 @@ it('fails if no agents are detected', function () {
 
 it('accepts custom guideline paths', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
 
     // Create an existing Cursor config file to trigger detection
     file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
@@ -131,11 +131,11 @@ it('accepts custom guideline paths', function () {
 
 it('detects multiple agents', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
 
     // Create config files for multiple agents
     mkdir("{$this->artifactPath}/.claude", 0777, true);
@@ -154,15 +154,15 @@ it('detects multiple agents', function () {
 
 it('accepts custom skill paths', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
 
     // Write a skill using the subdirectory structure
-    mkdir("{$fusionPath}/skills/my-skill", 0777, true);
-    file_put_contents("{$fusionPath}/skills/my-skill/SKILL.md", '# My Skill Content');
+    mkdir("{$mushPath}/skills/my-skill", 0777, true);
+    file_put_contents("{$mushPath}/skills/my-skill/SKILL.md", '# My Skill Content');
 
     // Create an existing Cursor config file to trigger detection
     file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');
@@ -182,11 +182,11 @@ it('accepts custom skill paths', function () {
 
 it('accepts custom MCP paths', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode([
         'servers' => [
             'test-server' => [
                 'command' => ['npx', 'test-server'],
@@ -214,11 +214,11 @@ it('accepts custom MCP paths', function () {
 
 it('merges custom MCP path with existing file', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode([
         'servers' => [
             'new-server' => ['command' => ['npx', 'new']],
         ],
@@ -250,11 +250,11 @@ it('merges custom MCP path with existing file', function () {
 
 it('handles remote servers in custom MCP paths', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode([
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode([
         'servers' => [
             'remote-server' => [
                 'url' => 'https://api.example.com/mcp',
@@ -281,12 +281,12 @@ it('handles remote servers in custom MCP paths', function () {
 
 it('handles absolute paths for custom paths', function () {
     // Set up .mush directory
-    $fusionPath = "{$this->artifactPath}/.mush";
-    mkdir($fusionPath, 0777, true);
-    mkdir("{$fusionPath}/guidelines", 0777, true);
-    mkdir("{$fusionPath}/skills", 0777, true);
-    file_put_contents("{$fusionPath}/mcp.json", json_encode(['servers' => []]));
-    file_put_contents("{$fusionPath}/guidelines/test.md", '# Test');
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
+    file_put_contents("{$mushPath}/guidelines/test.md", '# Test');
 
     // Create an existing Cursor config file to trigger detection
     file_put_contents("{$this->artifactPath}/.cursorrules", '# Placeholder');

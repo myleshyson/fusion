@@ -14,14 +14,14 @@ afterEach(function () {
     cleanDirectory($this->artifactPath);
 });
 
-it('initializes a fusion project correctly', function () {
+it('initializes a mush project correctly', function () {
     $command = new InstallCommand;
     $command->setApplication(App::build());
 
     TestCommand::for($command)
         ->execute("--working-dir={$this->artifactPath} --claude")
         ->assertSuccessful()
-        ->assertOutputContains('Fusion initialized successfully!');
+        ->assertOutputContains('Mush initialized successfully!');
 
     // Verify .mush directory structure
     expect("{$this->artifactPath}/.mush")->toBeDirectory();
@@ -36,7 +36,7 @@ it('initializes a fusion project correctly', function () {
     expect("{$this->artifactPath}/.claude/mcp.json")->toBeFile();
 });
 
-it('fails if fusion is already initialized', function () {
+it('fails if mush is already initialized', function () {
     // Create existing .mush directory
     mkdir("{$this->artifactPath}/.mush", 0777, true);
 

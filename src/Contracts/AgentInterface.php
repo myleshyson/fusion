@@ -6,7 +6,7 @@ interface AgentInterface
 {
     /**
      * Get the CLI option name for this agent (e.g., 'claude', 'cursor').
-     * Used for `fusion install --claude --cursor` etc.
+     * Used for `mush install --claude --cursor` etc.
      */
     public static function optionName(): string;
 

@@ -17,7 +17,7 @@ use function Laravel\Prompts\multiselect;
 
 #[AsCommand(
     name: 'install',
-    description: 'Initialize a new Fusion project and write agent configuration files.',
+    description: 'Initialize a new Mush project and write agent configuration files.',
 )]
 class InstallCommand extends Command
 {
@@ -39,12 +39,12 @@ class InstallCommand extends Command
     {
         /** @var string $workingDirectory */
         $workingDirectory = $input->getOption('working-dir') ?? getcwd();
-        $fusionPath = $workingDirectory.'/.mush';
+        $mushPath = $workingDirectory.'/.mush';
 
         // Check if .mush already exists
-        if (is_dir($fusionPath)) {
-            $output->writeln('<error>Fusion is already initialized in this directory.</error>');
-            $output->writeln('Run <info>fusion update</info> to sync agent files.');
+        if (is_dir($mushPath)) {
+            $output->writeln('<error>Mush is already initialized in this directory.</error>');
+            $output->writeln('Run <info>mush update</info> to sync agent files.');
 
             return Command::FAILURE;
         }
@@ -53,23 +53,23 @@ class InstallCommand extends Command
         $selectedAgents = $this->getSelectedAgents($input, $workingDirectory);
 
         // Create .mush directory structure
-        $this->createFusionStructure($fusionPath);
+        $this->createMushStructure($mushPath);
 
         // Write empty mcp.json template
-        $this->writeMcpTemplate($fusionPath);
+        $this->writeMcpTemplate($mushPath);
 
         // Compile guidelines and skills (will be empty on first run)
         $guidelinesCompiler = new GuidelinesCompiler;
         $skillsCompiler = new SkillsCompiler;
 
-        $guidelines = $guidelinesCompiler->compile($fusionPath.'/guidelines');
-        $skills = $skillsCompiler->compile($fusionPath.'/skills');
+        $guidelines = $guidelinesCompiler->compile($mushPath.'/guidelines');
+        $skills = $skillsCompiler->compile($mushPath.'/skills');
 
         // Format output content
         $content = $this->formatOutput($guidelines, $skills);
 
         // Read MCP config
-        $mcpConfig = McpConfigReader::read($fusionPath);
+        $mcpConfig = McpConfigReader::read($mushPath);
 
         // Write to each selected agent's paths
         $agents = AgentFactory::fromOptionNames($selectedAgents, $workingDirectory);
@@ -92,13 +92,13 @@ class InstallCommand extends Command
         $writtenPaths[] = '.mush/mcp.override.json'; // Always gitignore local overrides
         $gitignoreUpdater->addPaths($writtenPaths);
 
-        $output->writeln('<info>Fusion initialized successfully!</info>');
+        $output->writeln('<info>Mush initialized successfully!</info>');
         $output->writeln('');
         $output->writeln('Next steps:');
         $output->writeln('  1. Add guideline markdown files to <comment>.mush/guidelines/</comment>');
         $output->writeln('  2. Add skills as subdirectories with SKILL.md to <comment>.mush/skills/</comment>');
         $output->writeln('  3. Configure MCP servers in <comment>.mush/mcp.json</comment>');
-        $output->writeln('  4. Run <comment>fusion update</comment> to sync changes');
+        $output->writeln('  4. Run <comment>mush update</comment> to sync changes');
 
         return Command::SUCCESS;
     }
@@ -134,21 +134,21 @@ class InstallCommand extends Command
         return $selected;
     }
 
-    protected function createFusionStructure(string $fusionPath): void
+    protected function createMushStructure(string $mushPath): void
     {
         // Create directories
-        mkdir($fusionPath, 0755, true);
-        mkdir($fusionPath.'/guidelines', 0755, true);
-        mkdir($fusionPath.'/skills', 0755, true);
+        mkdir($mushPath, 0755, true);
+        mkdir($mushPath.'/guidelines', 0755, true);
+        mkdir($mushPath.'/skills', 0755, true);
 
         // Create .gitignore files to prevent accidental commits of source files
         // but keep the directories
         $gitignoreContent = "*\n!.gitignore\n";
-        file_put_contents($fusionPath.'/guidelines/.gitignore', $gitignoreContent);
-        file_put_contents($fusionPath.'/skills/.gitignore', $gitignoreContent);
+        file_put_contents($mushPath.'/guidelines/.gitignore', $gitignoreContent);
+        file_put_contents($mushPath.'/skills/.gitignore', $gitignoreContent);
     }
 
-    protected function writeMcpTemplate(string $fusionPath): void
+    protected function writeMcpTemplate(string $mushPath): void
     {
         $template = [
             'servers' => [
@@ -157,7 +157,7 @@ class InstallCommand extends Command
         ];
 
         file_put_contents(
-            $fusionPath.'/mcp.json',
+            $mushPath.'/mcp.json',
             json_encode($template, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n"
         );
     }

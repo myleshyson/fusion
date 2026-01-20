@@ -46,12 +46,12 @@ class UpdateCommand extends Command
     {
         /** @var string $workingDirectory */
         $workingDirectory = $input->getOption('working-dir') ?? getcwd();
-        $fusionPath = $workingDirectory.'/.mush';
+        $mushPath = $workingDirectory.'/.mush';
 
         // Check if .mush directory exists
-        if (! is_dir($fusionPath)) {
-            $output->writeln('<error>Fusion is not initialized in this directory.</error>');
-            $output->writeln('Run <info>fusion install</info> first to set up your project.');
+        if (! is_dir($mushPath)) {
+            $output->writeln('<error>Mush is not initialized in this directory.</error>');
+            $output->writeln('Run <info>mush install</info> first to set up your project.');
 
             return Command::FAILURE;
         }
@@ -61,7 +61,7 @@ class UpdateCommand extends Command
 
         if (empty($agents)) {
             $output->writeln('<error>No agents detected in this project.</error>');
-            $output->writeln('Run <info>fusion install</info> to configure agents.');
+            $output->writeln('Run <info>mush install</info> to configure agents.');
 
             return Command::FAILURE;
         }
@@ -70,14 +70,14 @@ class UpdateCommand extends Command
         $guidelinesCompiler = new GuidelinesCompiler;
         $skillsCompiler = new SkillsCompiler;
 
-        $guidelines = $guidelinesCompiler->compile($fusionPath.'/guidelines');
-        $skills = $skillsCompiler->compile($fusionPath.'/skills');
+        $guidelines = $guidelinesCompiler->compile($mushPath.'/guidelines');
+        $skills = $skillsCompiler->compile($mushPath.'/skills');
 
         // Format output content
         $content = $this->formatOutput($guidelines, $skills);
 
         // Read MCP config (base + override)
-        $mcpConfig = McpConfigReader::read($fusionPath);
+        $mcpConfig = McpConfigReader::read($mushPath);
 
         // Write to each detected agent's paths
         $writtenPaths = [];

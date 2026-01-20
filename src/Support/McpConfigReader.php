@@ -9,10 +9,10 @@ class McpConfigReader
      *
      * @return array<string, mixed>
      */
-    public static function read(string $fusionPath): array
+    public static function read(string $mushPath): array
     {
-        $baseConfig = self::readFile($fusionPath.'/mcp.json');
-        $overrideConfig = self::readFile($fusionPath.'/mcp.override.json');
+        $baseConfig = self::readFile($mushPath.'/mcp.json');
+        $overrideConfig = self::readFile($mushPath.'/mcp.override.json');
 
         // Override completely replaces matching servers
         return array_replace($baseConfig, $overrideConfig);
