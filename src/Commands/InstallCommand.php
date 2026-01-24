@@ -81,6 +81,12 @@ class InstallCommand extends Command
             if ($agent->mcp() !== null) {
                 $writtenPaths[] = $agent->mcp()->path();
             }
+            if ($agent->agents() !== null) {
+                $writtenPaths[] = $agent->agents()->path();
+            }
+            if ($agent->commands() !== null) {
+                $writtenPaths[] = $agent->commands()->path();
+            }
         }
 
         // Update .gitignore

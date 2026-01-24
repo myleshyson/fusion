@@ -28,22 +28,23 @@ describe('Codex', function () {
 
     it('returns correct detection paths', function () {
         $agent = new Codex($this->artifactPath);
+        // Only .codex/ to avoid conflict with OpenCode which also uses AGENTS.md
         expect($agent->detectionPaths())->toBe([
-            'AGENTS.md',
             '.codex/',
         ]);
-    });
-
-    it('detects when AGENTS.md exists', function () {
-        file_put_contents("{$this->artifactPath}/AGENTS.md", '# Test');
-        $agent = new Codex($this->artifactPath);
-        expect($agent->detect())->toBeTrue();
     });
 
     it('detects when .codex directory exists', function () {
         mkdir("{$this->artifactPath}/.codex", 0777, true);
         $agent = new Codex($this->artifactPath);
         expect($agent->detect())->toBeTrue();
+    });
+
+    it('does not detect when only AGENTS.md exists', function () {
+        // AGENTS.md alone should not trigger Codex detection (OpenCode uses it too)
+        file_put_contents("{$this->artifactPath}/AGENTS.md", '# Test');
+        $agent = new Codex($this->artifactPath);
+        expect($agent->detect())->toBeFalse();
     });
 
     it('does not support MCP', function () {
