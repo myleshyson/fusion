@@ -2,11 +2,13 @@
 
 namespace Myleshyson\Mush\Agents\Cursor\Features;
 
+use Myleshyson\Mush\Agents\Concerns\CleanupDirectoryItems;
 use Myleshyson\Mush\Agents\Concerns\HasWorkingDirectory;
 use Myleshyson\Mush\Contracts\CommandsSupport;
 
 class Commands implements CommandsSupport
 {
+    use CleanupDirectoryItems;
     use HasWorkingDirectory;
 
     public function __construct(
@@ -28,5 +30,14 @@ class Commands implements CommandsSupport
             $commandPath = rtrim($basePath, '/').'/'.$commandName.'.md';
             file_put_contents($commandPath, $commandData['content']);
         }
+    }
+
+    /**
+     * @param  array<string, array{name: string, description: string, content: string}>  $currentCommands
+     */
+    public function cleanup(array $currentCommands): void
+    {
+        $basePath = $this->fullPath($this->path());
+        $this->cleanupMarkdownFiles($basePath, $currentCommands);
     }
 }

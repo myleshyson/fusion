@@ -15,4 +15,11 @@ interface SkillsSupport
      * @param  array<string, array{name: string, description: string, content: string}>  $skills  Map of skill-name => skill data
      */
     public function write(array $skills): void;
+
+    /**
+     * Remove skills that are no longer in the source.
+     *
+     * @param  array<string, array{name: string, description: string, content: string}>  $currentSkills  Map of skill-name => skill data that should exist
+     */
+    public function cleanup(array $currentSkills): void;
 }

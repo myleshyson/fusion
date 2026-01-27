@@ -101,6 +101,11 @@ class UpdateCommand extends Command
         $writtenPaths = [];
 
         foreach ($agents as $agent) {
+            // Cleanup removed items before writing
+            $agent->skills()?->cleanup($skills);
+            $agent->commands()?->cleanup($compiledCommands);
+
+            // Write current items
             $agent->guidelines()?->write($content);
             $agent->skills()?->write($skills);
             $agent->mcp()?->write($mcpConfig);

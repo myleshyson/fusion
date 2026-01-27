@@ -2,11 +2,13 @@
 
 namespace Myleshyson\Mush\Agents\Junie\Features;
 
+use Myleshyson\Mush\Agents\Concerns\CleanupDirectoryItems;
 use Myleshyson\Mush\Agents\Concerns\HasWorkingDirectory;
 use Myleshyson\Mush\Contracts\CommandsSupport;
 
 class Commands implements CommandsSupport
 {
+    use CleanupDirectoryItems;
     use HasWorkingDirectory;
 
     public function __construct(
@@ -28,6 +30,15 @@ class Commands implements CommandsSupport
             $content = $this->reconstructContent($commandData);
             file_put_contents($commandPath, $content);
         }
+    }
+
+    /**
+     * @param  array<string, array{name: string, description: string, content: string}>  $currentCommands
+     */
+    public function cleanup(array $currentCommands): void
+    {
+        $basePath = $this->fullPath($this->path());
+        $this->cleanupMarkdownFiles($basePath, $currentCommands);
     }
 
     /**

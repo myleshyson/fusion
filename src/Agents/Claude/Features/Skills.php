@@ -2,11 +2,13 @@
 
 namespace Myleshyson\Mush\Agents\Claude\Features;
 
+use Myleshyson\Mush\Agents\Concerns\CleanupDirectoryItems;
 use Myleshyson\Mush\Agents\Concerns\HasWorkingDirectory;
 use Myleshyson\Mush\Contracts\SkillsSupport;
 
 class Skills implements SkillsSupport
 {
+    use CleanupDirectoryItems;
     use HasWorkingDirectory;
 
     public function __construct(
@@ -33,6 +35,15 @@ class Skills implements SkillsSupport
             $content = $this->reconstructContent($skillData);
             file_put_contents($skillPath, $content);
         }
+    }
+
+    /**
+     * @param  array<string, array{name: string, description: string, content: string}>  $currentSkills
+     */
+    public function cleanup(array $currentSkills): void
+    {
+        $basePath = $this->fullPath($this->path());
+        $this->cleanupSkillDirectories($basePath, $currentSkills);
     }
 
     /**
