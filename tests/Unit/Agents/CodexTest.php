@@ -21,17 +21,24 @@ describe('Codex', function () {
     it('returns correct paths', function () {
         $agent = new Codex($this->artifactPath);
         expect($agent->guidelines()->path())->toBe('AGENTS.md');
-        expect($agent->skills()->path())->toBe('.codex/skills/');
+        expect($agent->skills()->path())->toBe('.agents/skills/');
         // Codex does not support MCP
         expect($agent->mcp())->toBeNull();
     });
 
     it('returns correct detection paths', function () {
         $agent = new Codex($this->artifactPath);
-        // Only .codex/ to avoid conflict with OpenCode which also uses AGENTS.md
+        // AGENTS.md is shared with OpenCode, so use Codex-specific paths.
         expect($agent->detectionPaths())->toBe([
+            '.agents/skills/',
             '.codex/',
         ]);
+    });
+
+    it('detects when .agents skills directory exists', function () {
+        mkdir("{$this->artifactPath}/.agents/skills", 0777, true);
+        $agent = new Codex($this->artifactPath);
+        expect($agent->detect())->toBeTrue();
     });
 
     it('detects when .codex directory exists', function () {
@@ -52,7 +59,24 @@ describe('Codex', function () {
         expect($agent->mcp())->toBeNull();
 
         // No file should be created since MCP is not supported
+        expect(file_exists("{$this->artifactPath}/.agents/mcp.json"))->toBeFalse();
         expect(file_exists("{$this->artifactPath}/.codex/mcp.json"))->toBeFalse();
+    });
+
+    it('writes skills to the .agents directory', function () {
+        $agent = new Codex($this->artifactPath);
+        $agent->skills()->write([
+            'testing' => [
+                'name' => 'testing',
+                'description' => 'Runs tests',
+                'content' => '# Testing',
+            ],
+        ]);
+
+        expect("{$this->artifactPath}/.agents/skills/testing/SKILL.md")->toBeFile();
+        expect(file_get_contents("{$this->artifactPath}/.agents/skills/testing/SKILL.md"))
+            ->toContain('# Testing');
+        expect("{$this->artifactPath}/.codex/skills/testing/SKILL.md")->not->toBeFile();
     });
 
     it('does not support agents', function () {

@@ -82,6 +82,30 @@ it('lists available skills in agent guidelines file', function () {
     expect($content)->not->toContain('Testing skill content');
 });
 
+it('updates Codex skills under .agents/skills', function () {
+    $mushPath = "{$this->artifactPath}/.mush";
+    mkdir($mushPath, 0777, true);
+    mkdir("{$mushPath}/guidelines", 0777, true);
+    mkdir("{$mushPath}/skills/testing", 0777, true);
+    file_put_contents("{$mushPath}/mcp.json", json_encode(['servers' => []]));
+    file_put_contents("{$mushPath}/skills/testing/SKILL.md", '# Testing skill');
+
+    // .agents/skills is Codex's project-local skill root.
+    mkdir("{$this->artifactPath}/.agents/skills", 0777, true);
+
+    $command = new UpdateCommand;
+    $command->setApplication(App::build());
+
+    TestCommand::for($command)
+        ->execute("--working-dir={$this->artifactPath}")
+        ->assertSuccessful()
+        ->assertOutputContains('Updated OpenAI Codex');
+
+    expect("{$this->artifactPath}/AGENTS.md")->toBeFile();
+    expect("{$this->artifactPath}/.agents/skills/testing/SKILL.md")->toBeFile();
+    expect("{$this->artifactPath}/.codex/skills/testing/SKILL.md")->not->toBeFile();
+});
+
 it('fails if mush is not initialized', function () {
     $command = new UpdateCommand;
     $command->setApplication(App::build());

@@ -25,9 +25,10 @@ class Codex extends BaseAgent
      */
     public function detectionPaths(): array
     {
-        // Only detect via .codex/ directory to avoid conflict with OpenCode
-        // which also uses AGENTS.md
+        // AGENTS.md is shared with OpenCode, so use Codex-specific paths for
+        // detection. .codex/ remains valid for Codex project configuration.
         return [
+            '.agents/skills/',
             '.codex/',
         ];
     }

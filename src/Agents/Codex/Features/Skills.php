@@ -17,7 +17,7 @@ class Skills implements SkillsSupport
 
     public function path(): string
     {
-        return '.codex/skills/';
+        return '.agents/skills/';
     }
 
     public function write(array $skills): void
