@@ -302,7 +302,7 @@ mush update --commands-path=./custom/commands/
 | GitHub Copilot | `.github/copilot-instructions.md` | `.github/skills/`   | `.vscode/mcp.json`      | `.github/agents/`     | `.github/prompts/`\*\*       |
 | Gemini         | `GEMINI.md`                       | `.gemini/skills/`   | `.gemini/settings.json` | —                     | `.gemini/commands/`\*\*\*    |
 | OpenCode       | `AGENTS.md`                       | `.opencode/skills/` | `opencode.json`         | `.opencode/agents/`   | `.opencode/commands/`        |
-| OpenAI Codex   | `AGENTS.md`                       | `.codex/skills/`    | —\*                     | —                     | —                            |
+| OpenAI Codex   | `AGENTS.md`                       | `.agents/skills/`   | —\*                     | —                     | —                            |
 | Junie          | `.junie/guidelines.md`            | `.junie/skills/`    | `.junie/mcp/mcp.json`   | —                     | `.junie/commands/`           |
 
 \*OpenAI Codex supports MCP via `~/.codex/config.toml`, but only at the global/user level, not per-project. Mush focuses on project-level configuration, so Codex MCP is not currently supported.
